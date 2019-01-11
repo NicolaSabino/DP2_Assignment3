@@ -58,12 +58,15 @@
 		<xsd:complexType>
 			<xsd:complexContent>
 					<xsd:extension base="identifiedEntityType">
-						<xsd:attribute name="entryTime" type="xsd:dateTime" use="required"/>
-						<xsd:attribute name="type" type="vType" use="required"/>
-						<xsd:attribute name="state" type="vState" use="required"/>
-						<xsd:attribute name="position" type="xsd:anyURI" use="required"/><!-- ref -->
-						<xsd:attribute name="origin" type="xsd:anyURI" use="required"/><!-- ref -->
-						<xsd:attribute name="destination" type="xsd:anyURI" use="required"/><!-- ref -->
+						<xsd:sequence>
+							<xsd:element name="self" type="xsd:anyURI"/>
+							<xsd:element name="entryTime" type="xsd:dateTime"/>
+							<xsd:element name="type" type="vType"/>
+							<xsd:element name="state" type="vState"/>
+							<xsd:element name="position" type="xsd:anyURI"/>
+							<xsd:element name="origin" type="xsd:anyURI"/>
+							<xsd:element name="destination" type="xsd:anyURI"/>
+						</xsd:sequence>
 					</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>

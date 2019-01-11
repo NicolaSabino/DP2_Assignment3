@@ -1,5 +1,7 @@
 package it.polito.dp2.RNS.sol3.service;
 
+import java.net.URI;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,7 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -20,9 +21,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
-import it.polito.dp2.RNS.sol1.jaxb.PlaceType;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RnsSystem;
+import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
+import it.polito.dp2.RNS.sol1.jaxb.Vehicles;
 import io.swagger.annotations.ApiResponse;
 
 @Path("/RnsSystem") // main path
@@ -108,33 +110,36 @@ public class RnsSystemResource {
     		@ApiResponse(code = 404, message = "Not Found"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public  Place getPlace(@PathParam("id") long id){
+	public  Place getPlace(@PathParam("id") String id){
 		Place target = service.getPlace(id);		// search the target place with the corresponding `id`
 		if (target==null)							// check the return value
-			throw new NotFoundException();			// if is it null, the resource does not exists
+			throw new NotFoundException();			// if it is null, the resource does not exists
 		return target;								// otherwise return the target place
 	}
 	
 	@GET
 	@Path("/palces/{id}/connectedTo")
-    @ApiOperation(value = "getPlaceConnectedTo", notes = "read places that are conected to the selected palce")
+    @ApiOperation(value = "getPlacesConnectedTo", notes = "read places that are conected to the selected palce")
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
     		@ApiResponse(code = 404, message = "Not Found"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Places getPlaceConnectedTo(@PathParam("id") long id){
-		Place target = service.getPlace(id);		// search the target place with the corresponding `id`
-		
-		return null;
-	} // TODO  we obtain a list of places
+	public Places getPlacesConnectedTo(@PathParam("id") String id){
+		Places returnSet = service.getplacesConnectedTo(id);	// search the list of connected places to `id`
+		if (returnSet==null)									// check the return value
+			throw new NotFoundException();						// if it is null, the resource does not exists
+		return returnSet;										// otherwise return the returnSet
+	}
 	
 	@GET
 	@Path("/vehicles")
     @ApiOperation(value = "getVehicles", notes = "searches vehicles ")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public void getVehicles(){} // TODO  we obtain a list of places
+	public Vehicles getVehicles(){
+		return service.getVehicles();							// get all the vehicles from the service
+	}
 	
 	@GET
 	@Path("/vehicles/{id}")
@@ -144,7 +149,12 @@ public class RnsSystemResource {
     		@ApiResponse(code = 404, message = "Not Found"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public void getVehicle(){} // TODO  we obtain a list of places
+	public Vehicle getVehicle(@PathParam("id") String id){
+		Vehicle target = service.getVehicle(id);				// get the target vehicle from the service
+		if(target == null)										// check the result
+			throw new NotFoundException();						// if it is null, the resource does not exists
+		return target;											// otherwise return the target vehicle
+	}
 
 	// we can use PUT for creation (idempotent)
 	/*
@@ -177,7 +187,37 @@ public class RnsSystemResource {
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response createVehicle(){return null;} // TODO
+	public Vehicle createVehicle(Vehicle vehicle){
+		UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(vehicle.getId());	// it produces `.../vehicles/{identifier}
+    	URI self = builder.build();														// build the self URI
+    	vehicle.setSelf(self.toString());
+		Vehicle v = service.createVehicle(vehicle); // creation of the item
+		if (v ==null)
+			throw new ConflictException();	
+		return v;
+	}
+	
+	/*
+	 * 5. A tracked vehicle can request the system to change its state at any time. The request is
+	 * always accepted by the system.
+	 */
+	@PUT
+	@Path("/vehicles/{id}/state")
+    @ApiOperation(value = "updateVehicle", notes = "update single vehicle"
+	)
+    @ApiResponses(value = {
+    		@ApiResponse(code = 200, message = "OK"),
+    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 400, message = "Bad Request"),
+    		})
+	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+	public Vehicle updateVehicleState(Vehicle vehicle){
+		Vehicle v = service.updateVehicleState(vehicle);
+		if(v == null)
+			throw new NotFoundException();
+		return v;
+	}
 	
 	/*
 	 * 3. Whenever a tracked vehicle moves from a place to another one, it informs the system about
@@ -191,23 +231,28 @@ public class RnsSystemResource {
 	 * Finally, if the new place is not reachable from the previous current position
 	 * of the vehicle, the request from the vehicle is considered wrong by the system, and nothing
 	 * changes.
-	 * 
-	 * 5. A tracked vehicle can request the system to change its state at any time. The request is
-	 * always accepted by the system.
 	 */
 	@PUT
-	@Path("/vehicles/{id}")
+	@Path("/vehicles/{id}/position")
     @ApiOperation(value = "updateVehicle", notes = "update single vehicle"
 	)
     @ApiResponses(value = {
-    		@ApiResponse(code = 204, message = "No Content"),	// new position stored
-    		@ApiResponse(code = 200, message = "OK"),			// new path calculated
+    		@ApiResponse(code = 200, message = "OK"),
     		@ApiResponse(code = 404, message = "Not Found"),
     		@ApiResponse(code = 400, message = "Bad Request"),
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public void updateVehicle(){} // TODO
+	public Places updateVehiclePosition(@PathParam("id") String id,Place place){
+		Vehicle v = service.getVehicle(id);				// search the target vehicle
+		if(v == null)									// check the return value
+			throw new NotFoundException();				// if null the vehicle does not exists
+		Places path = service.calculatePath(v,place);	// calculate the current/new path
+		if(path == null)								// check the path status
+			throw new ConflictException("The new place is not reachable from the previous current position"); // if is null throw a conflict
+		return path;									// otherwise return the current/new path
+	}	
+	
 	
 	
 	/*
@@ -228,6 +273,11 @@ public class RnsSystemResource {
     		@ApiResponse(code = 404, message = "Not Found"),
     		//@ApiResponse(code = 409, message = "Conflict"), if a vehicle is not in a exit gate
     		})
-	public void deleteVehicle(){}
+	public void deleteVehicle(@PathParam("id") String id){
+		Vehicle v = service.deleteVehicle(id);	// delete the vehicle `id`
+		if (v==null)							// check the return value
+			throw new NotFoundException();		// the vehicle does not exists
+		return;
+	}
 	
 }
