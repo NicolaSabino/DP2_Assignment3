@@ -86,17 +86,25 @@
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="commonPlaceType">
+				<xsd:sequence>
 					<xsd:choice>
-					<xsd:element ref="roadSegment"/>
-					<xsd:element ref="parkingArea"/>
-					<xsd:element name="gate" type="gate"/>
+						<xsd:element ref="roadSegment"/>
+						<xsd:element ref="parkingArea"/>
+						<xsd:element name="gate" type="gate"/>
+					</xsd:choice>
 					<xsd:element name="self" type="xsd:anyURI"/>
 					<xsd:element name="connectedTo" type="xsd:anyURI"/>
-				</xsd:choice>
+					<xsd:element name="vehicles" type="xsd:anyURI"/>
+				</xsd:sequence>
 				<xsd:attribute name="capacity" type="xsd:int" use="required"/>
 				</xsd:extension>
 			</xsd:complexContent>
 		</xsd:complexType>
+		<!-- unique #1 -->
+		<xsd:unique name="serviceUniqueness">
+			<xsd:selector xpath="parkingArea/service"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
 	</xsd:element>
 	
 	<xsd:element name="roadSegment">

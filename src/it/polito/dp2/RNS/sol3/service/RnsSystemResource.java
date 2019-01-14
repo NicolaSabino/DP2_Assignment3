@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,10 +26,14 @@ import org.eclipse.persistence.internal.oxm.Root;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
+import it.polito.dp2.RNS.sol1.jaxb.Connection;
 import it.polito.dp2.RNS.sol1.jaxb.Connections;
+import it.polito.dp2.RNS.sol1.jaxb.Gate;
+import it.polito.dp2.RNS.sol1.jaxb.ParkingArea;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RnsSystem;
+import it.polito.dp2.RNS.sol1.jaxb.RoadSegment;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicles;
 import io.swagger.annotations.ApiResponse;
@@ -67,8 +72,8 @@ public class RnsSystemResource {
 		sys.setGates(root.clone().path("places").path("gates").toTemplate());				// set the `gates` field
 		sys.setRoadSegments(root.clone().path("places").path("roadSegments").toTemplate());	// set the `RoadSegments" field
 		sys.setParkingAreas(root.clone().path("places").path("parkingAreas").toTemplate());	// set the `parlingAreas" field
-		sys.setConnections(root.clone().path("connections").toTemplate());	// set the `connections" field
-		sys.setVehicles(root.clone().path("vehicles").toTemplate());			// set the `vehicles" field
+		sys.setConnections(root.clone().path("connections").toTemplate());					// set the `connections" field
+		sys.setVehicles(root.clone().path("vehicles").toTemplate());						// set the `vehicles" field
 		return sys;
 	}
 	
@@ -78,19 +83,36 @@ public class RnsSystemResource {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Places getPlaces(){
-		Places places = service.getPlaces(SearchScope.ALL);										// get all the places from the service
-		UriBuilder root = uriInfo.getAbsolutePathBuilder();										// get the root URI
+		// be careful with POINTER when accessing directly to DB data structures.
+		// we have to create a CLONE in order to not modify the DB resource
+		Places places = service.getPlaces(SearchScope.ALL);		// get all the places from the service
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
+		Places places2 = new Places();							// new EMPTY places container (the final clone)
 		for(Place p:places.getPlace()){															// for each place
-			p.setSelf(root.clone().path(p.getId()).toTemplate());								// set the `self` field
-			p.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set `connectedTo` field
-			/*List<String> newNextPlaces = new ArrayList<>();
-			for(String identifier: p.getNextPlace()){											// for each next place
-				newNextPlaces.add(root.clone().path(identifier).toTemplate());
+			Place temp = new Place();															// create a new empty place container
+			temp.setId(p.getId());																// set the `id` field
+			temp.setCapacity(p.getCapacity());													// set the `capacity` field
+			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
+			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
+			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			// check the type of place
+			if(p.getGate()!= null){
+				temp.setGate(p.getGate());															// set the `gate` fields
+			}else if(p.getRoadSegment()!= null){
+				RoadSegment rs = new RoadSegment();													// create a new empty road segment
+				rs.setName(p.getRoadSegment().getName());											// set `name`
+				rs.setRoad(p.getRoadSegment().getRoad());											// set `road`
+				temp.setRoadSegment(rs);			
+			}else if(p.getParkingArea()!= null){
+				ParkingArea pa = new ParkingArea();													// create a new empty parking area
+				pa.getService().addAll(p.getParkingArea().getService());							// set `services`
+				temp.setParkingArea(pa);
 			}
-			p.getNextPlace().clear();
-			p.getNextPlace().addAll(newNextPlaces);*/
+			for(String identifier:p.getNextPlace())												// for each next place
+				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			places2.getPlace().add(temp);														// add the place to places2														
 		}
-		return places;
+		return places2;
 	}
 	
 	@GET
@@ -99,7 +121,16 @@ public class RnsSystemResource {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Connections getConnections(){
-		return service.getConnections();	// get all the connections from the service
+		Connections connections = new Connections();
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();								// get the root URI
+		String uri = root.clone().toTemplate();											// create an uri string
+		for(Connection c:service.getConnections().getConnection()){						// for each connection
+			Connection temp = new Connection();											// create an empty connection
+			temp.setFrom(uri.replace("connections", "places/".concat(c.getFrom())));	// set `from` field
+			temp.setTo(uri.replace("connections", "places/".concat(c.getTo())));		// set `to` field
+			connections.getConnection().add(temp);										// add the connection to the empty set
+		}
+		return connections;
 	}
 	
 	@GET
@@ -108,16 +139,49 @@ public class RnsSystemResource {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Places getGates(@QueryParam("type") String keyword){
-		return service.getPlaces(SearchScope.GATES); // get all the gates from the service
+		Places places = service.getPlaces(SearchScope.GATES);		// get all the places from the service
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
+		Places places2 = new Places();							// new EMPTY places container (the final clone)
+		for(Place p:places.getPlace()){															// for each place
+			Place temp = new Place();															// create a new empty place container
+			temp.setId(p.getId());																// set the `id` field
+			temp.setCapacity(p.getCapacity());													// set the `capacity` field
+			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
+			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
+			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			temp.setGate(p.getGate());															// set the `gate` fields
+			for(String identifier:p.getNextPlace())												// for each next place
+				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			places2.getPlace().add(temp);														// add the place to places2														
+		}
+		return places2;
 	} 
 	
-	@GET
+	@GET 
 	@Path("/places/roadSegments")
     @ApiOperation(value = "getRoadSegments", notes = "searches road segmetns")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Places getRoadSegments(@QueryParam("type") String keyword){
-		return service.getPlaces(SearchScope.ROADSEGMENTS); // get all the road segments from the service
+		Places places = service.getPlaces(SearchScope.ROADSEGMENTS);		// get all the places from the service
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();					// get the root URI
+		Places places2 = new Places();										// new EMPTY places container (the final clone)
+		for(Place p:places.getPlace()){															// for each place
+			Place temp = new Place();															// create a new empty place container
+			temp.setId(p.getId());																// set the `id` field
+			temp.setCapacity(p.getCapacity());													// set the `capacity` field
+			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
+			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
+			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			RoadSegment rs = new RoadSegment();													// create a new empty road segment
+			rs.setName(p.getRoadSegment().getName());											// set `name`
+			rs.setRoad(p.getRoadSegment().getRoad());											// set `road`
+			temp.setRoadSegment(rs);															// attach rs to temp
+			for(String identifier:p.getNextPlace())												// for each next place
+				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			places2.getPlace().add(temp);														// add the place to places2														
+		}
+		return places2;
 	}
 	
 	@GET
@@ -126,10 +190,27 @@ public class RnsSystemResource {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Places getParkingAreas(@QueryParam("type") String keyword){
-		return service.getPlaces(SearchScope.PARKINGAREAS); // get all the parking areas from the service
+		Places places = service.getPlaces(SearchScope.PARKINGAREAS);		// get all the places from the service
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();					// get the root URI
+		Places places2 = new Places();										// new EMPTY places container (the final clone)
+		for(Place p:places.getPlace()){															// for each place
+			Place temp = new Place();															// create a new empty place container
+			temp.setId(p.getId());																// set the `id` field
+			temp.setCapacity(p.getCapacity());													// set the `capacity` field
+			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
+			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
+			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			ParkingArea pa = new ParkingArea();													// create a new empty parking area
+			pa.getService().addAll(p.getParkingArea().getService());							// set `services`
+			temp.setParkingArea(pa); 															// attach parking area to tmp
+			for(String identifier:p.getNextPlace())												// for each next place
+				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			places2.getPlace().add(temp);														// add the place to places2														
+		}
+		return places2;
 	}
 	
-	@GET
+	@GET 
 	@Path("/places/{id}")
     @ApiOperation(value = "getPlace", notes = "read single place"
 	)
@@ -144,9 +225,31 @@ public class RnsSystemResource {
 			throw new NotFoundException();										// if it is null, the resource does not exists
 		
 		UriBuilder self = uriInfo.getAbsolutePathBuilder();						// get the absolute path
-		target.setSelf(self.clone().toTemplate());								//set the self property
-		target.setConnectedTo(self.clone().path("connectedTo").toTemplate());	// set `connectedTo` field
-		return target;															// return the target place
+		Place place = new Place();												// create a new empty place container
+		place.setId(target.getId());											// set `id` field
+		place.setCapacity(target.getCapacity());								// set `capacity` field
+		place.setSelf(self.clone().toTemplate());								// set `self` field
+		place.setConnectedTo(self.clone().path("connectedTo").toTemplate());	// set `connectedTo` field
+		place.setVehicles(self.clone().path("vehicles").toTemplate());
+		// check the type of place
+		if(target.getGate()!= null){
+			place.setGate(target.getGate());													// set the `gate` fields
+		}else if(target.getRoadSegment()!= null){
+			RoadSegment rs = new RoadSegment();													// create a new empty road segment
+			rs.setName(target.getRoadSegment().getName());										// set `name`
+			rs.setRoad(target.getRoadSegment().getRoad());										// set `road`
+			place.setRoadSegment(rs);			
+		}else if(target.getParkingArea()!= null){
+			ParkingArea pa = new ParkingArea();													// create a new empty parking area
+			pa.getService().addAll(target.getParkingArea().getService());						// set `services`
+			place.setParkingArea(pa);
+		}
+		for(String identifier:target.getNextPlace()){							// for each next place
+			String uri = self.clone().toTemplate();								// get the uri of the current resource
+			String newUri = uri.replace(place.getId(), identifier);				// replace the identifier with the proper one
+			place.getNextPlace().add(newUri);									// add the new next place
+		}
+		return place;															// return the target place
 	}
 	
 	@GET
@@ -161,10 +264,24 @@ public class RnsSystemResource {
 		Places places = service.getplacesConnectedTo(id);	// search the list of connected places to `id`
 		if (places==null)									// check the return value
 			throw new NotFoundException();					// if it is null, the resource does not exists
-		return places;										// otherwise return the returnSet
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
+		String uri = root.clone().toTemplate();					// get the corresponding uri (string)
+		Places places2 = new Places();							// new EMPTY places container (the final clone)
+		for(Place p:places.getPlace()){																			// for each place
+			Place temp = new Place();																			// create a new empty place container
+			temp.setId(p.getId());																				// set the `id` field
+			temp.setCapacity(p.getCapacity());																	// set the `capacity` field
+			temp.setSelf(uri.replace(id.concat("/connectedTo"),p.getId()));										// set the `self` field
+			temp.setConnectedTo(uri.replaceAll(id.concat("/connectedTo"),p.getId().concat("/connectedTo")));	// set the `connectedTo` field
+			temp.setVehicles(uri.replaceAll(id.concat("/connectedTo"),p.getId().concat("/vehicles")));
+			for(String identifier:p.getNextPlace())																// for each next place
+				temp.getNextPlace().add(uri.replace(id.concat("/connectedTo"), identifier));					// set the `nextplace` link
+			places2.getPlace().add(temp);																		// add the place to places2														
+		}
+		return places2;
 	}
 	
-	@GET
+	@GET // TODO
 	@Path("/vehicles")
     @ApiOperation(value = "getVehicles", notes = "searches vehicles ")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
@@ -173,7 +290,7 @@ public class RnsSystemResource {
 		return service.getVehicles();							// get all the vehicles from the service
 	}
 	
-	@GET
+	@GET // TODO
 	@Path("/vehicles/{id}")
     @ApiOperation(value = "getVehicle", notes = "read single vehicle")
     @ApiResponses(value = {
@@ -220,13 +337,29 @@ public class RnsSystemResource {
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Vehicle createVehicle(Vehicle vehicle){
-		UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(vehicle.getId());	// it produces `.../vehicles/{identifier}
-    	URI self = builder.build();														// build the self URI
-    	vehicle.setSelf(self.toString());
-		Vehicle v = service.createVehicle(vehicle); // creation of the item
-		if (v ==null)
-			throw new ConflictException();	
-		return v;
+		//UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+    	//vehicle.setSelf(builder.clone().path(vehicle.toString()).toTemplate());
+		//Vehicle v = service.createVehicle(vehicle); // creation of the item
+		//if (v !=null)
+		//	throw new ConflictException();	
+		//return v;
+		
+		// --1-- check if the vehicle is already in the system
+		Vehicle v = service.getVehicle(vehicle.getId());	// search the vehicle
+		if( v != null)										// i already exists throw and exception
+			throw new ConflictException("this vehicle already exists");
+		// --2-- check the gate type
+		Place place = service.getPlace(vehicle.getOrigin());		// get the place from the db
+		if( place != null)
+			throw new BadRequestException("the gate does not exists");
+		if( place.getGate()==Gate.OUT)
+			throw new BadRequestException("wrong gate type");
+		// --3-- check if the destination is reachable
+		//if(!service.isReachable(place.getId()))
+			//throw new ConflictException();
+		
+		Vehicle ret = service.createVehicle(vehicle);		// create the vehicle
+		return ret;
 	}
 	
 	/*

@@ -1,9 +1,13 @@
 package it.polito.dp2.RNS.sol3.service;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -24,11 +28,13 @@ import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RoadSegment;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
+import it.polito.dp2.RNS.sol2.BadStateException;
 import it.polito.dp2.RNS.sol2.ModelException;
 import it.polito.dp2.RNS.sol2.PathFinder;
 import it.polito.dp2.RNS.sol2.PathFinderException;
 import it.polito.dp2.RNS.sol2.PathFinderFactory;
 import it.polito.dp2.RNS.sol2.ServiceException;
+import it.polito.dp2.RNS.sol2.UnknownIdException;
 
 // SINGLETON  CLASS FILE
 public class RnsSystemDB {
@@ -166,7 +172,7 @@ public class RnsSystemDB {
 	}
 
 	public Collection<Vehicle> getVehicles() {
-		return new ConcurrentSkipListSet<>(RnsSystemDB.vehicles.values());
+		return new ConcurrentLinkedQueue<>(RnsSystemDB.vehicles.values());
 	}
 
 	public Vehicle getVehicle(String id) {
@@ -175,9 +181,9 @@ public class RnsSystemDB {
 	}
 
 	public Vehicle createVehicle(Vehicle vehicle) {
-		vehicles.put(vehicle.getId(), vehicle);
+		//vehicles.put(vehicle.getId(), vehicle);
 		//TODO we have to calculate the path
-		return null;
+		return vehicles.putIfAbsent(vehicle.getId(), vehicle);
 	}
 	
 
@@ -210,4 +216,17 @@ public class RnsSystemDB {
 	public Collection<Connection> getConnections() {
 		return connections;
 	}
+
+	public List<String> isReachable(String from,String to) {
+		Set<List<String>> resultSet = null;
+		try {
+			resultSet = pathFinder.findShortestPaths(from, to, 1000);
+		} catch (UnknownIdException | BadStateException | ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Iterator<List<String>> iter = resultSet.iterator();
+		return iter.next();
+	}
+	
 }

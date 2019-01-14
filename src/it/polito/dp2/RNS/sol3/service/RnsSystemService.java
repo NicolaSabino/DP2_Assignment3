@@ -76,4 +76,8 @@ public class RnsSystemService {
 		return connections;
 	}
 
+	public List<Place> isReachable(String from, String to) {
+		return db.isReachable(from,to);
+	}
+
 }
