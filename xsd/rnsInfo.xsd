@@ -19,6 +19,7 @@
 		<xsd:complexType>
 			<xsd:sequence>
 				<xsd:element ref="connection" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="self" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -28,7 +29,6 @@
 			<xsd:sequence>
 				<xsd:element name="from" type="xsd:anyURI"/>
 				<xsd:element name="to" type="xsd:anyURI"/>
-				<xsd:element name="self" type="xsd:anyURI"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -90,6 +90,8 @@
 					<xsd:element ref="roadSegment"/>
 					<xsd:element ref="parkingArea"/>
 					<xsd:element name="gate" type="gate"/>
+					<xsd:element name="self" type="xsd:anyURI"/>
+					<xsd:element name="connectedTo" type="xsd:anyURI"/>
 				</xsd:choice>
 				<xsd:attribute name="capacity" type="xsd:int" use="required"/>
 				</xsd:extension>

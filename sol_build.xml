@@ -8,6 +8,7 @@
 	<property name="custom.dir" location="${basedir}/custom"/>
 	<property name="build.dir" location="${basedir}/build"/>
 	<property name="schema.dir" location="${basedir}/xsd" />
+	<property name="gen.src" location="${basedir}/gen-src"/>
 	<property name="pack1" value="it.polito.dp2.RNS.sol1.jaxb"/>
 	<property name="pack2" value="it.polito.dp2.RNS.rest.jaxb"/>
 	
@@ -20,8 +21,9 @@
 	<!-- generate java classes from rnsInfo.xsd -->
 	<target name="generate_lab1">
 		<echo message="generate java classes from rnsInfo.xsd " />
+		<mkdir dir="${basedir}/gen-src"/>
 		<exec executable="xjc" failonerror="true" >
-			<arg line="-d gen-src -p ${pack1} ${schema.dir}/rnsInfo.xsd"/>
+			<arg line="-d ${gen.src} -p ${pack1} ${schema.dir}/rnsInfo.xsd"/>
 		</exec>
 	</target>
 	
@@ -34,8 +36,9 @@
 		</exec>
 	</target>
 	
-	<target name="build-service"  depends="generate_lab1, generate_lab2">
+	<target name="build-service"  depends="myclean,generate_lab1, generate_lab2">
 		<echo message="Compiling ${pack1} and ${pack2}..." />
+		<mkdir dir="${build.dir}"/>
 		<javac destdir="build" debug="on" includeantruntime="false">
 			<src path="gen-src" />
 			<classpath refid="RNS.classpath"/>
@@ -46,6 +49,18 @@
 			<src path="src" />
 			<classpath refid="RNS.classpath"/>
 		</javac>
+		
+		<echo message="copy from bin to build" />
+		<copy toDir="${build.dir}" overwrite="true">
+			<fileset dir="bin"/>
+		</copy>
+		
+	</target>
+	
+	<!-- Target clean -->
+	<target name="myclean" description="Clean all">
+		<delete dir="${build.dir}" />
+		<delete dir="${gen.src}"/>
 	</target>
 
 </project>

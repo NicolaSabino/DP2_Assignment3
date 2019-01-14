@@ -4,5 +4,5 @@ public enum SearchScope {
 	ALL,
 	GATES,
 	PARKINGAREAS,
-	ROADSEGMETNS;
+	ROADSEGMENTS;
 }
