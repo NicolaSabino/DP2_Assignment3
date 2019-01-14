@@ -15,6 +15,14 @@
 		</xsd:complexType>
 	</xsd:element>
 	
+	<xsd:element name="shortestPath">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="place" type="xsd:anyURI" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
 	<xsd:element name="connections">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -66,6 +74,7 @@
 							<xsd:element name="position" type="xsd:anyURI"/>
 							<xsd:element name="origin" type="xsd:anyURI"/>
 							<xsd:element name="destination" type="xsd:anyURI"/>
+							<xsd:element name="path" type="xsd:anyURI"/>
 						</xsd:sequence>
 					</xsd:extension>
 			</xsd:complexContent>

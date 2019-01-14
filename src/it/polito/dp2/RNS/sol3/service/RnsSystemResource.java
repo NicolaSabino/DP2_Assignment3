@@ -20,8 +20,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.persistence.internal.oxm.Root;
+import org.joda.time.DateTime;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +38,8 @@ import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RnsSystem;
 import it.polito.dp2.RNS.sol1.jaxb.RoadSegment;
+import it.polito.dp2.RNS.sol1.jaxb.ShortestPath;
+import it.polito.dp2.RNS.sol1.jaxb.VState;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicles;
 import io.swagger.annotations.ApiResponse;
@@ -146,12 +152,15 @@ public class RnsSystemResource {
 			Place temp = new Place();															// create a new empty place container
 			temp.setId(p.getId());																// set the `id` field
 			temp.setCapacity(p.getCapacity());													// set the `capacity` field
-			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
-			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
-			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			String s = root.clone().toTemplate();
+			temp.setSelf(s.replace("gates", p.getId()));										// set the `self` field
+			temp.setConnectedTo(s.replace("gates", p.getId().concat("/connectedTo")));			// set the `connectedTo` field
+			temp.setVehicles(s.replace("gates", p.getId().concat("/vehicles")));				// set the `vehicles` field
 			temp.setGate(p.getGate());															// set the `gate` fields
-			for(String identifier:p.getNextPlace())												// for each next place
-				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			for(String identifier:p.getNextPlace()){											// for each next place
+				String ss = root.clone().toTemplate();
+				temp.getNextPlace().add(ss.replace("gates", identifier));						// set the `nextplace` link
+			}
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
 		return places2;
@@ -170,15 +179,18 @@ public class RnsSystemResource {
 			Place temp = new Place();															// create a new empty place container
 			temp.setId(p.getId());																// set the `id` field
 			temp.setCapacity(p.getCapacity());													// set the `capacity` field
-			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
-			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
-			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			String s = root.clone().toTemplate();
+			temp.setSelf(s.replace("roadSegments",p.getId()));									// set the `self` field
+			temp.setConnectedTo(s.replace("roadSegments", p.getId().concat("/connectedTo")));	// set the `connectedTo` field
+			temp.setVehicles(s.replace("roadSegments",p.getId().concat("/vehicles")));			// set the `vehicles`
 			RoadSegment rs = new RoadSegment();													// create a new empty road segment
 			rs.setName(p.getRoadSegment().getName());											// set `name`
 			rs.setRoad(p.getRoadSegment().getRoad());											// set `road`
 			temp.setRoadSegment(rs);															// attach rs to temp
-			for(String identifier:p.getNextPlace())												// for each next place
-				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			for(String identifier:p.getNextPlace()){											// for each next place
+				String ss = root.clone().toTemplate();
+				temp.getNextPlace().add(ss.replace("roadSegments", identifier));				// set the `nextplace` link
+			}
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
 		return places2;
@@ -197,14 +209,17 @@ public class RnsSystemResource {
 			Place temp = new Place();															// create a new empty place container
 			temp.setId(p.getId());																// set the `id` field
 			temp.setCapacity(p.getCapacity());													// set the `capacity` field
-			temp.setSelf(root.clone().path(p.getId()).toTemplate());							// set the `self` field
-			temp.setConnectedTo(root.clone().path(p.getId()).path("connectedTo").toTemplate());	// set the `connectedTo` field
-			temp.setVehicles(root.clone().path(p.getId()).path("vehicles").toTemplate());
+			String s = root.clone().toTemplate();
+			temp.setSelf(s.replace("parkingAreas",p.getId()));									// set the `self` field
+			temp.setConnectedTo(s.replace("parkingAreas",p.getId().concat("connectedTo")));		// set the `connectedTo` field
+			temp.setVehicles(s.replace("parkingAreas",p.getId().concat("vehicles")));
 			ParkingArea pa = new ParkingArea();													// create a new empty parking area
 			pa.getService().addAll(p.getParkingArea().getService());							// set `services`
 			temp.setParkingArea(pa); 															// attach parking area to tmp
-			for(String identifier:p.getNextPlace())												// for each next place
-				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
+			for(String identifier:p.getNextPlace()){											// for each next place
+				String ss = root.clone().toTemplate();
+				temp.getNextPlace().add(ss.replace("parkingAreas", identifier));				// set the `nextplace` link
+			}
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
 		return places2;
@@ -252,6 +267,19 @@ public class RnsSystemResource {
 		return place;															// return the target place
 	}
 	
+	@GET // TODO
+	@Path("/places/{id}/vehicles")
+    @ApiOperation(value = "getPlace", notes = "read single place"
+	)
+    @ApiResponses(value = {
+    		@ApiResponse(code = 200, message = "OK"),
+    		@ApiResponse(code = 404, message = "Not Found"),
+    		})
+	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+	public  void getVehiclesFromPlace(@PathParam("id") String id){
+		return ;
+	}
+	
 	@GET
 	@Path("/places/{id}/connectedTo")
     @ApiOperation(value = "getPlacesConnectedTo", notes = "read places that are conected to the selected palce")
@@ -287,7 +315,22 @@ public class RnsSystemResource {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	public Vehicles getVehicles(){
-		return service.getVehicles();							// get all the vehicles from the service
+		Vehicles ret = new Vehicles();
+		for(Vehicle target: service.getVehicles().getVehicle()){							// get all the vehicles from the service
+			UriBuilder root = uriInfo.getAbsolutePathBuilder();								// get the root URI
+			String uri = root.clone().toTemplate();											// generate a string from the URI
+			Vehicle v2 = new Vehicle();														// create a new empty container
+			v2.setId(target.getId());
+			v2.setOrigin(uri.replace("vehicles", "places/".concat(target.getOrigin())));
+			v2.setPosition(uri.replace("vehicles", "places/".concat(target.getPosition())));
+			v2.setDestination(uri.replace("vehicles", "places/".concat(target.getDestination())));
+			v2.setEntryTime(target.getEntryTime());
+			v2.setState(target.getState());
+			v2.setSelf(uri.concat("/").concat(target.getId()));
+			v2.setPath(uri.concat("/").concat(target.getId()).concat("/path"));
+			ret.getVehicle().add(v2);
+		}
+		return ret;
 	}
 	
 	@GET // TODO
@@ -302,7 +345,18 @@ public class RnsSystemResource {
 		Vehicle target = service.getVehicle(id);				// get the target vehicle from the service
 		if(target == null)										// check the result
 			throw new NotFoundException();						// if it is null, the resource does not exists
-		return target;											// otherwise return the target vehicle
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
+		String uri = root.clone().toTemplate();					// generate a string from the URI
+		Vehicle v2 = new Vehicle();								// create a new empty container
+		v2.setId(target.getId());
+		v2.setOrigin(uri.replace("vehicles/".concat(target.getId()), "places/".concat(target.getOrigin())));
+		v2.setPosition(uri.replace("vehicles/".concat(target.getId()), "places/".concat(target.getPosition())));
+		v2.setDestination(uri.replace("vehicles/".concat(target.getId()), "places/".concat(target.getDestination())));
+		v2.setEntryTime(target.getEntryTime());
+		v2.setState(target.getState());
+		v2.setSelf(root.clone().toTemplate());
+		v2.setPath(root.clone().path("path").toTemplate());
+		return v2;											
 	}
 
 	// we can use PUT for creation (idempotent)
@@ -336,7 +390,7 @@ public class RnsSystemResource {
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Vehicle createVehicle(Vehicle vehicle){
+	public ShortestPath createVehicle(Vehicle vehicle){
 		//UriBuilder builder = uriInfo.getAbsolutePathBuilder();
     	//vehicle.setSelf(builder.clone().path(vehicle.toString()).toTemplate());
 		//Vehicle v = service.createVehicle(vehicle); // creation of the item
@@ -350,16 +404,48 @@ public class RnsSystemResource {
 			throw new ConflictException("this vehicle already exists");
 		// --2-- check the gate type
 		Place place = service.getPlace(vehicle.getOrigin());		// get the place from the db
-		if( place != null)
+		if( place == null)
 			throw new BadRequestException("the gate does not exists");
 		if( place.getGate()==Gate.OUT)
 			throw new BadRequestException("wrong gate type");
-		// --3-- check if the destination is reachable
-		//if(!service.isReachable(place.getId()))
-			//throw new ConflictException();
+		// --3-- check if the destination is reachable and exists
+		Place dest = service.getPlace(vehicle.getDestination());
+		if(dest == null)
+			throw new BadRequestException();
+		List<String> res = service.isReachable(vehicle.getOrigin(), vehicle.getDestination());
+		if(res == null)
+			throw new ConflictException();
 		
-		Vehicle ret = service.createVehicle(vehicle);		// create the vehicle
-		return ret;
+		
+		//return the shortest path
+		ShortestPath path = new ShortestPath();					// create a new empty shortest path container
+		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
+		for(String identifier: res){							// for each place in the `res` variable
+			String ss = root.clone().toTemplate();
+			path.getPlace().add(ss.replace("vehicles", "places/".concat(identifier)));
+		}
+		
+		vehicle.setState(VState.IN_TRANSIT);					// update the vehicle state
+		XMLGregorianCalendar xgc;								// try to generate the current date time
+		try {
+			xgc = DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar());
+		} catch (DatatypeConfigurationException e) {
+			throw new InternalServerErrorException();
+		}
+		vehicle.setEntryTime(xgc);
+		vehicle.setPosition(vehicle.getOrigin());
+		vehicle.setPath(null);
+		/*
+		 * putIfAbsent: A value null will be returned if the key-value mapping is successfully 
+		 * added to the hashmap object while if the id is already present on the hashmap the value 
+		 * which is already existing will returned instead.
+		 */
+		if(service.storeShortestPath(vehicle.getId(),path)!=null)
+			throw new InternalServerErrorException();
+		if(service.createVehicle(vehicle)!=null)
+			throw new InternalServerErrorException();
+		return path;
+		
 	}
 	
 	/*

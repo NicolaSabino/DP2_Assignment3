@@ -27,6 +27,7 @@ import it.polito.dp2.RNS.sol1.jaxb.ParkingArea;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RoadSegment;
+import it.polito.dp2.RNS.sol1.jaxb.ShortestPath;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol2.BadStateException;
 import it.polito.dp2.RNS.sol2.ModelException;
@@ -46,6 +47,7 @@ public class RnsSystemDB {
 	private static Map<String, Place>						parkingAreas;
 	private static Map<String, Place>						roadSegments;
 	private static Map<String, Vehicle>						vehicles;
+	private static Map<String,ShortestPath>					paths;
 	private static Queue<Connection>						connections;
 	private static PathFinder								pathFinder;
 	//Queue<String> globalQueue = new ConcurrentLinkedQueue<String>();
@@ -78,7 +80,7 @@ public class RnsSystemDB {
 		roadSegments = new ConcurrentHashMap<String,Place>();
 		vehicles = new ConcurrentHashMap<String,Vehicle>();
 		connections = new ConcurrentLinkedQueue<Connection>();
-		
+		paths = new ConcurrentHashMap<String,ShortestPath>();
 		
 		for(GateReader g:monitor.getGates(null)){				// for each gate
 			Place	tmp = new Place();							// create an empty place container
@@ -181,8 +183,6 @@ public class RnsSystemDB {
 	}
 
 	public Vehicle createVehicle(Vehicle vehicle) {
-		//vehicles.put(vehicle.getId(), vehicle);
-		//TODO we have to calculate the path
 		return vehicles.putIfAbsent(vehicle.getId(), vehicle);
 	}
 	
@@ -227,6 +227,10 @@ public class RnsSystemDB {
 		}
 		Iterator<List<String>> iter = resultSet.iterator();
 		return iter.next();
+	}
+
+	public ShortestPath storeShortesPath(String id, ShortestPath path) {
+		return paths.putIfAbsent(id, path);
 	}
 	
 }

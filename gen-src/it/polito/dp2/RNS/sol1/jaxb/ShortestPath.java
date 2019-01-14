@@ -8,6 +8,8 @@
 
 package it.polito.dp2.RNS.sol1.jaxb;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,8 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="from" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
- *         &lt;element name="to" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
+ *         &lt;element name="place" type="{http://www.w3.org/2001/XMLSchema}anyURI" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,65 +39,42 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "from",
-    "to"
+    "place"
 })
-@XmlRootElement(name = "connection")
-public class Connection {
+@XmlRootElement(name = "shortestPath")
+public class ShortestPath {
 
     @XmlElement(required = true)
     @XmlSchemaType(name = "anyURI")
-    protected String from;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "anyURI")
-    protected String to;
+    protected List<String> place;
 
     /**
-     * Gets the value of the from property.
+     * Gets the value of the place property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFrom() {
-        return from;
-    }
-
-    /**
-     * Sets the value of the from property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the place property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFrom(String value) {
-        this.from = value;
-    }
-
-    /**
-     * Gets the value of the to property.
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPlace().add(newItem);
+     * </pre>
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTo() {
-        return to;
-    }
-
-    /**
-     * Sets the value of the to property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     * 
+     * 
      */
-    public void setTo(String value) {
-        this.to = value;
+    public List<String> getPlace() {
+        if (place == null) {
+            place = new ArrayList<String>();
+        }
+        return this.place;
     }
 
 }

@@ -11,10 +11,18 @@
 	<property name="gen.src" location="${basedir}/gen-src"/>
 	<property name="pack1" value="it.polito.dp2.RNS.sol1.jaxb"/>
 	<property name="pack2" value="it.polito.dp2.RNS.rest.jaxb"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
+	<property name="shared.location" location="/opt/dp2/shared"/>
+	<property name="ext.lib.dir" location="${shared.location}/lib" />
 	
 	<!-- The classpath to be used for compilation of the solution -->
 	<path id="RNS.classpath">
-		<pathelement location="${lib.dir}/RNS.jar" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${ext.lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
 	</path>
 
 	
@@ -45,7 +53,7 @@
 		</javac>
 		
 		<echo message="Compiling the java source files..." />
-		<javac destdir="bin" debug="on" includeantruntime="false">
+		<javac destdir="${build.dir}" debug="on" includeantruntime="false">
 			<src path="src" />
 			<classpath refid="RNS.classpath"/>
 		</javac>

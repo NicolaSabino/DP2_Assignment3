@@ -6,6 +6,7 @@ import it.polito.dp2.RNS.sol1.jaxb.Connection;
 import it.polito.dp2.RNS.sol1.jaxb.Connections;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
+import it.polito.dp2.RNS.sol1.jaxb.ShortestPath;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicles;
 
@@ -76,8 +77,12 @@ public class RnsSystemService {
 		return connections;
 	}
 
-	public List<Place> isReachable(String from, String to) {
+	public List<String> isReachable(String from, String to) {
 		return db.isReachable(from,to);
+	}
+
+	public ShortestPath storeShortestPath(String id,ShortestPath path) {
+		return db.storeShortesPath(id, path);
 	}
 
 }
