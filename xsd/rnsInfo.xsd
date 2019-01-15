@@ -75,6 +75,8 @@
 							<xsd:element name="origin" type="xsd:anyURI"/>
 							<xsd:element name="destination" type="xsd:anyURI"/>
 							<xsd:element name="path" type="xsd:anyURI"/>
+							<xsd:element name="newPosition" type="xsd:anyURI"/>
+							<xsd:element name="newState" type="xsd:anyURI"/>
 						</xsd:sequence>
 					</xsd:extension>
 			</xsd:complexContent>

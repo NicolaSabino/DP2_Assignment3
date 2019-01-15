@@ -1,12 +1,10 @@
 package it.polito.dp2.RNS.sol3.service;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -27,7 +25,6 @@ import it.polito.dp2.RNS.sol1.jaxb.ParkingArea;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RoadSegment;
-import it.polito.dp2.RNS.sol1.jaxb.ShortestPath;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol2.BadStateException;
 import it.polito.dp2.RNS.sol2.ModelException;
@@ -40,18 +37,18 @@ import it.polito.dp2.RNS.sol2.UnknownIdException;
 // SINGLETON  CLASS FILE
 public class RnsSystemDB {
 
-	private static RnsSystemDB 								db = new RnsSystemDB();		// creation of singleton
-	private static RnsReader								monitor;					// monitor to access the RNS interfaces
-	private static Map<String, Place>						places;
-	private static Map<String, Place>						gates;
-	private static Map<String, Place>						parkingAreas;
-	private static Map<String, Place>						roadSegments;
-	private static Map<String, Vehicle>						vehicles;
-	private static Map<String,ShortestPath>					paths;
-	private static Map<String,Integer>						vehiclesInPlace;
-	private static Queue<Connection>						connections;
-	private static PathFinder								pathFinder;
-	//Queue<String> globalQueue = new ConcurrentLinkedQueue<String>();
+	private static RnsSystemDB 									db = new RnsSystemDB();		// creation of singleton
+	private static RnsReader									monitor;					// monitor to access the RNS interfaces
+	private static Map<String, Place>							places;
+	private static Map<String, Place>							gates;
+	private static Map<String, Place>							parkingAreas;
+	private static Map<String, Place>							roadSegments;
+	private static Map<String, Vehicle>							vehicles;
+	private static Map<String,ConcurrentSkipListSet<String>>	paths;
+	private static Map<String,Integer>							capacityInPlace;
+	private static Map<String,ConcurrentLinkedQueue<String>>	vehiclesInPlace;
+	private static Queue<Connection>							connections;
+	private static PathFinder									pathFinder;
 	/**
 	 * Private constructor of the singleton
 	 */
@@ -81,7 +78,8 @@ public class RnsSystemDB {
 		roadSegments = new ConcurrentHashMap<String,Place>();
 		vehicles = new ConcurrentHashMap<String,Vehicle>();
 		connections = new ConcurrentLinkedQueue<Connection>();
-		paths = new ConcurrentHashMap<String,ShortestPath>();
+		paths = new ConcurrentHashMap<String,ConcurrentSkipListSet<String>>();
+		capacityInPlace = new ConcurrentHashMap<>();
 		vehiclesInPlace = new ConcurrentHashMap<>();
 		
 		
@@ -95,7 +93,9 @@ public class RnsSystemDB {
 				tmp.getNextPlace().add(r.getId()); // add the URI			
 			places.put(tmp.getId(),tmp);						// add the container to `places`
 			gates.put(tmp.getId(), tmp);						// add the container to `gates`
-			vehiclesInPlace.put(tmp.getId(),new Integer(0));	// create new place in `vehiclesInPlace`
+			capacityInPlace.put(tmp.getId(),new Integer(0));	// create new place in `capacityInPlace`
+			vehiclesInPlace.put(tmp.getId(), new ConcurrentLinkedQueue<String>());	//create a new place in `vehiclesInPlace`
+			paths.put(tmp.getId(), new ConcurrentSkipListSet<String>());	// create a new place in `paths`
 		}
 		
 		
@@ -111,7 +111,9 @@ public class RnsSystemDB {
 				tmp.getNextPlace().add(r.getId()); 					// add the URI	
 			places.put(tmp.getId(), tmp);							// add the container to  `places`	
 			parkingAreas.put(tmp.getId(), tmp);						// add the container to `parkingAreas`
-			vehiclesInPlace.put(tmp.getId(),new Integer(0));		// create new place in `vehiclesInPlace`
+			capacityInPlace.put(tmp.getId(),new Integer(0));		// create new place in `capacityInPlace`
+			vehiclesInPlace.put(tmp.getId(), new ConcurrentLinkedQueue<String>());	//create a new place in `vehiclesInPlace`
+			paths.put(tmp.getId(), new ConcurrentSkipListSet<String>());	// create a new place in `paths`
 		}
 		
 		
@@ -128,7 +130,9 @@ public class RnsSystemDB {
 				tmp.getNextPlace().add(r.getId()); 					// add the URI	
 			places.put(tmp.getId(), tmp);							// add the container to `places`
 			roadSegments.put(tmp.getId(), tmp);						// add the container to `roadSegments`
-			vehiclesInPlace.put(tmp.getId(),new Integer(0));		// create new place in `vehiclesInPlace`
+			capacityInPlace.put(tmp.getId(),new Integer(0));		// create new place in `capacityInPlace`
+			vehiclesInPlace.put(tmp.getId(), new ConcurrentLinkedQueue<String>());	//create a new place in `vehiclesInPlace`
+			paths.put(tmp.getId(), new ConcurrentSkipListSet<String>());	// create a new place in `paths`
 
 		}
 		
@@ -190,12 +194,14 @@ public class RnsSystemDB {
 	}
 
 	public Vehicle createVehicle(Vehicle vehicle) {
+		ConcurrentLinkedQueue<String> queue = vehiclesInPlace.get(vehicle.getOrigin());
+		queue.add(vehicle.getId());
 		return vehicles.putIfAbsent(vehicle.getId(), vehicle);
 	}
 	
 
-	public Vehicle updateVehicleState(Vehicle vehicle) {
-		Vehicle v = vehicles.get(vehicle.getId());			// select the target vehicle
+	public Vehicle updateVehicleState(String id,Vehicle vehicle) {
+		Vehicle v = vehicles.get(id);			// select the target vehicle
 		if(v==null) return null;							// if the vehicle does not exist return null
 		v.setState(vehicle.getState()); 					// update the state
 		return v;											// return the update instance of the vehicle
@@ -231,12 +237,12 @@ public class RnsSystemDB {
 		return iter.next();
 	}
 
-	public ShortestPath storeShortesPath(String id, ShortestPath path) {
-		return paths.putIfAbsent(id, path);
+	public Collection<String> storeShortesPath(String id, List<String> res) {
+		return paths.putIfAbsent(id, new ConcurrentSkipListSet<String>(res));
 	}
 	
-	public Integer manageCapacity(String place){
-		return vehiclesInPlace.get(place);
+	public Integer getCapacity(String place){
+		return capacityInPlace.get(place);
 	}
 
 	public List<Place> calculatePath(Vehicle vehicle, Place place) {
@@ -245,12 +251,32 @@ public class RnsSystemDB {
 	}
 
 	public void incrementPlace(String id) {
-		Integer capacity = vehiclesInPlace.get(id);
-		vehiclesInPlace.put(id, capacity.intValue()+1);
+		Integer capacity = capacityInPlace.get(id);
+		capacityInPlace.put(id, capacity.intValue()+1);
 	}
 	
 	public void decrementPlace(String id) {
-		Integer capacity = vehiclesInPlace.get(id);
-		vehiclesInPlace.put(id, capacity.intValue()-1);
+		Integer capacity = capacityInPlace.get(id);
+		capacityInPlace.put(id, capacity.intValue()-1);
+	}
+
+	public Collection<String> getVehiclesFromPlace(String id) {
+		return vehiclesInPlace.get(id);
+	}
+
+	public ConcurrentSkipListSet<String> getShortestPath(String id) {
+		return paths.get(id);
+	}
+
+	public Vehicle setNewPosition(String vehicle,String place) {
+		Vehicle v = vehicles.get(vehicle);
+		v.setPosition(place);
+		return vehicles.put(vehicle, v);
+	}
+
+	public Object clearShortestPath(String vehicle) {
+		Object o = paths.remove(vehicle);
+		paths.put(vehicle, new ConcurrentSkipListSet<>());
+		return o;
 	}
 }

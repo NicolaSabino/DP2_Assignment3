@@ -1,12 +1,13 @@
 package it.polito.dp2.RNS.sol3.service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import it.polito.dp2.RNS.sol1.jaxb.Connection;
 import it.polito.dp2.RNS.sol1.jaxb.Connections;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
-import it.polito.dp2.RNS.sol1.jaxb.ShortestPath;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicles;
 
@@ -49,8 +50,8 @@ public class RnsSystemService {
 		return db.createVehicle(vehicle);
 	}
 
-	public Vehicle updateVehicleState(Vehicle vehicle) {
-		return db.updateVehicleState(vehicle);
+	public Vehicle updateVehicleState(String id,Vehicle vehicle) {
+		return db.updateVehicleState(id,vehicle);
 	}
 
 	public Vehicle updateVehiclePosition(Vehicle vehicle) {
@@ -81,16 +82,33 @@ public class RnsSystemService {
 		return db.isReachable(from,to);
 	}
 
-	public ShortestPath storeShortestPath(String id,ShortestPath path) {
-		return db.storeShortesPath(id, path);
+	public Collection<String> storeShortestPath(String id,List<String> res) {
+		return db.storeShortesPath(id, res);
 	}
 	
 	public Integer getCapacity(String place){
-		return db.manageCapacity(place);
+		return db.getCapacity(place);
 	}
 
 	public void incrementPlace(String id) {
 		db.incrementPlace(id);
+	}
+
+	public Collection<String> getVehiclesFromPlace(String id) {
+		return db.getVehiclesFromPlace(id);
+	}
+
+	public ConcurrentSkipListSet<String> getShortestPath(String id) {
+		return db.getShortestPath(id);
+	}
+
+	public Vehicle setNewPosition(String vehicle,String place) {
+		return db.setNewPosition(vehicle,place);
+		
+	}
+
+	public Object clearShortestPath(String vehicle) {
+		return db.clearShortestPath(vehicle);
 	}
 
 }
