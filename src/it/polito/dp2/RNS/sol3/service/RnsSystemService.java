@@ -84,5 +84,13 @@ public class RnsSystemService {
 	public ShortestPath storeShortestPath(String id,ShortestPath path) {
 		return db.storeShortesPath(id, path);
 	}
+	
+	public Integer getCapacity(String place){
+		return db.manageCapacity(place);
+	}
+
+	public void incrementPlace(String id) {
+		db.incrementPlace(id);
+	}
 
 }

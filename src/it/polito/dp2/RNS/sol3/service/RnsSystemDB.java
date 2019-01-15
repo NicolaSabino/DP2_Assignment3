@@ -48,6 +48,7 @@ public class RnsSystemDB {
 	private static Map<String, Place>						roadSegments;
 	private static Map<String, Vehicle>						vehicles;
 	private static Map<String,ShortestPath>					paths;
+	private static Map<String,Integer>						vehiclesInPlace;
 	private static Queue<Connection>						connections;
 	private static PathFinder								pathFinder;
 	//Queue<String> globalQueue = new ConcurrentLinkedQueue<String>();
@@ -81,6 +82,8 @@ public class RnsSystemDB {
 		vehicles = new ConcurrentHashMap<String,Vehicle>();
 		connections = new ConcurrentLinkedQueue<Connection>();
 		paths = new ConcurrentHashMap<String,ShortestPath>();
+		vehiclesInPlace = new ConcurrentHashMap<>();
+		
 		
 		for(GateReader g:monitor.getGates(null)){				// for each gate
 			Place	tmp = new Place();							// create an empty place container
@@ -92,6 +95,7 @@ public class RnsSystemDB {
 				tmp.getNextPlace().add(r.getId()); // add the URI			
 			places.put(tmp.getId(),tmp);						// add the container to `places`
 			gates.put(tmp.getId(), tmp);						// add the container to `gates`
+			vehiclesInPlace.put(tmp.getId(),new Integer(0));	// create new place in `vehiclesInPlace`
 		}
 		
 		
@@ -102,11 +106,12 @@ public class RnsSystemDB {
 			tmp.setCapacity(pa.getCapacity());						// set `capacity`
 			tmp2.getService().addAll(pa.getServices());				// set the list of services
 			tmp.setParkingArea(tmp2);								// put the parking area container in the place container
-			tmp.setSelf(null); 		// set the `self` field
+			tmp.setSelf(null); 										// set the `self` field
 			for(PlaceReader r:pa.getNextPlaces())					// for each next place
-				tmp.getNextPlace().add(r.getId()); // add the URI	
+				tmp.getNextPlace().add(r.getId()); 					// add the URI	
 			places.put(tmp.getId(), tmp);							// add the container to  `places`	
 			parkingAreas.put(tmp.getId(), tmp);						// add the container to `parkingAreas`
+			vehiclesInPlace.put(tmp.getId(),new Integer(0));		// create new place in `vehiclesInPlace`
 		}
 		
 		
@@ -118,11 +123,13 @@ public class RnsSystemDB {
 			tmp2.setName(rs.getName());								// set `Name` field
 			tmp2.setRoad(rs.getRoadName());							// set `RoadName` field
 			tmp.setRoadSegment(tmp2);								// put the road segment container in the place container
-			tmp.setSelf(null); 		// set the `self` field
+			tmp.setSelf(null); 										// set the `self` field
 			for(PlaceReader r:rs.getNextPlaces())					// for each next place
-				tmp.getNextPlace().add(r.getId()); // add the URI	
+				tmp.getNextPlace().add(r.getId()); 					// add the URI	
 			places.put(tmp.getId(), tmp);							// add the container to `places`
 			roadSegments.put(tmp.getId(), tmp);						// add the container to `roadSegments`
+			vehiclesInPlace.put(tmp.getId(),new Integer(0));		// create new place in `vehiclesInPlace`
+
 		}
 		
 		for(ConnectionReader c:monitor.getConnections()){				// for each connection
@@ -202,11 +209,6 @@ public class RnsSystemDB {
 		return v;
 	}
 
-	public List<Place> calculatePath(Vehicle vehicle, Place place) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean deleteVehicle(String id) {
 		if(!vehicles.containsKey(id)) return false;
 		vehicles.remove(id);
@@ -233,4 +235,22 @@ public class RnsSystemDB {
 		return paths.putIfAbsent(id, path);
 	}
 	
+	public Integer manageCapacity(String place){
+		return vehiclesInPlace.get(place);
+	}
+
+	public List<Place> calculatePath(Vehicle vehicle, Place place) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void incrementPlace(String id) {
+		Integer capacity = vehiclesInPlace.get(id);
+		vehiclesInPlace.put(id, capacity.intValue()+1);
+	}
+	
+	public void decrementPlace(String id) {
+		Integer capacity = vehiclesInPlace.get(id);
+		vehiclesInPlace.put(id, capacity.intValue()-1);
+	}
 }

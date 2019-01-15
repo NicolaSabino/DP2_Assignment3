@@ -416,6 +416,11 @@ public class RnsSystemResource {
 		if(res == null)
 			throw new ConflictException();
 		
+		// --4-- check the capacity of the place
+		//if(place.getCapacity() <= service.getCapacity(place.getId()))	// the gate is full
+		//	throw new ConflictException();
+		if(service.getCapacity(place.getId()).intValue() >= place.getCapacity())
+			throw new ConflictException();
 		
 		//return the shortest path
 		ShortestPath path = new ShortestPath();					// create a new empty shortest path container
@@ -444,6 +449,9 @@ public class RnsSystemResource {
 			throw new InternalServerErrorException();
 		if(service.createVehicle(vehicle)!=null)
 			throw new InternalServerErrorException();
+		
+		// increment the number of vehicles in the place
+		service.incrementPlace(place.getId());
 		return path;
 		
 	}
