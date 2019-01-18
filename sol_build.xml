@@ -58,11 +58,6 @@
 			<classpath refid="RNS.classpath"/>
 		</javac>
 		
-		<echo message="copy from bin to build" />
-		<copy toDir="${build.dir}" overwrite="true">
-			<fileset dir="bin"/>
-		</copy>
-		
 	</target>
 	
 	<!-- Target clean -->

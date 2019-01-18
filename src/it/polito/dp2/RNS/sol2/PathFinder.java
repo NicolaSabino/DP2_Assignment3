@@ -27,6 +27,7 @@ import it.polito.dp2.RNS.rest.jaxb.Path;
 import it.polito.dp2.RNS.rest.jaxb.PathsRequest;
 import it.polito.dp2.RNS.rest.jaxb.Relationship;
 import it.polito.dp2.RNS.rest.jaxb.RelationshipResult;
+import it.polito.dp2.RNS.rest.jaxb.PathsRequest.Relationships;
 
 public class PathFinder{
 	
@@ -99,9 +100,18 @@ public class PathFinder{
 	 */
 	public RnsReader reloadModel() throws ServiceException, ModelException {
 		
+		if(isModelLoaded()){
+			System.out.println("clear all");
+			removeConnections();
+			removeNodes();
+			this.sys_link_map.clear();
+			this.link_sys_map.clear();
+			this.sys_db_map.clear();
+			this.r_set.clear();
+			
+		}
+		
 		Set<PlaceReader>		places = monitor.getPlaces(null);				// get places
-		
-		
 		if(places == null) throw new ModelException("Exception during reading random datas");
 	
 		// -- Neo4j NODES --
@@ -131,6 +141,27 @@ public class PathFinder{
 		return monitor;						// return the set
 
 	}
+	
+	private void removeNodes() {
+		for(URI tmp:this.sys_link_map.values()){
+			try {
+				removeResource(tmp);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+	private void removeConnections() {
+		for(URI tmp:this.r_set){
+			try {
+				removeResource(tmp);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * Looks for the shortest paths connecting a source place to a destination place
@@ -158,6 +189,10 @@ public class PathFinder{
 			throw new UnknownIdException("Bad `to` identifier");						
 		PathsRequest request = new PathsRequest();					// create a new path request
 		request.setMaxDepth(BigInteger.valueOf(maxlength));			// set `maxlength`
+		Relationships r = new Relationships();
+		r.setDirection("out");
+		r.setType("ConnectedTo");
+		request.setRelationships(r);
 		request.setTo(to.toString());								// set `to`
 		request.setAlgorithm("shortestPath");
 		
@@ -259,6 +294,17 @@ public class PathFinder{
 		}
 		return result;
 	}
+	
+	public Response removeResource(URI resource) throws ServiceException{
+			
+			Response result;
+			try{
+				result = this.client.target(resource).request().delete();
+			}catch(Exception e){
+				throw new ServiceException("Exception during relationship uploading");
+			}
+			return result;
+		}
 	
 	
 

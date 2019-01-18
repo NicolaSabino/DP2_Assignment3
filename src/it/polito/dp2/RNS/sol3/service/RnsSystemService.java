@@ -67,7 +67,7 @@ public class RnsSystemService {
 		return places;
 	}
 
-	public boolean deleteVehicle(String id) {
+	public Object deleteVehicle(String id) {
 		return db.deleteVehicle(id);
 	}
 
@@ -102,13 +102,17 @@ public class RnsSystemService {
 		return db.getShortestPath(id);
 	}
 
-	public Vehicle setNewPosition(String vehicle,String place) {
-		return db.setNewPosition(vehicle,place);
+	public Vehicle setNewPosition(String vehicle,String newplace, String oldplace) {
+		return db.setNewPosition(vehicle,newplace,oldplace);
 		
 	}
 
 	public Object clearShortestPath(String vehicle) {
 		return db.clearShortestPath(vehicle);
+	}
+
+	public void decrementPlace(String position) {
+		db .decrementPlace(position); 		
 	}
 
 }

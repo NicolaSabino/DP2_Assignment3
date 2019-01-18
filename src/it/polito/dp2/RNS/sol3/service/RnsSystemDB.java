@@ -67,7 +67,7 @@ public class RnsSystemDB {
 			monitor = pathFinder.reloadModel();				// load the model and return the monitor
 		} catch (ServiceException | ModelException e) {
 			e.printStackTrace();
-			throw new InternalServerErrorException();
+			//throw new InternalServerErrorException();
 		}
 		
 		
@@ -207,25 +207,32 @@ public class RnsSystemDB {
 		return v;											// return the update instance of the vehicle
 	}
 
-	// TODO  manage the path
-	public Vehicle updateVehiclePosition(Vehicle vehicle) {
+	public synchronized Vehicle updateVehiclePosition(Vehicle vehicle) {
 		Vehicle v = vehicles.get(vehicle.getId());			// select the target vehicle
 		if(v==null) return null;							// if the vehicle does not exist return null
 		v.setPosition(vehicle.getPosition()); 				// update the position
 		return v;
 	}
 
-	public boolean deleteVehicle(String id) {
-		if(!vehicles.containsKey(id)) return false;
-		vehicles.remove(id);
-		return true;
+	public synchronized Object deleteVehicle(String id) {
+		Vehicle v = vehicles.remove(id);
+		if(v == null) 	// at first try to remove path information
+			return null;
+		else {
+			// if i found the vehicle in the list delete it
+			for(ConcurrentLinkedQueue<String> queue:vehiclesInPlace.values()){
+				queue.remove(id);
+			}
+			return paths.remove(id);
+		}
+			
 	}
 
 	public Collection<Connection> getConnections() {
 		return connections;
 	}
 
-	public List<String> isReachable(String from,String to) {
+	public synchronized List<String> isReachable(String from,String to) {
 		Set<List<String>> resultSet = null;
 		try {
 			resultSet = pathFinder.findShortestPaths(from, to, 1000);
@@ -268,9 +275,13 @@ public class RnsSystemDB {
 		return paths.get(id);
 	}
 
-	public Vehicle setNewPosition(String vehicle,String place) {
+	public synchronized Vehicle setNewPosition(String vehicle,String newplace, String oldplace) {
 		Vehicle v = vehicles.get(vehicle);
-		v.setPosition(place);
+		if(!vehiclesInPlace.get(oldplace).remove(vehicle))
+			return null;
+		if(!vehiclesInPlace.get(newplace).add(vehicle))
+			return null;
+		v.setPosition(newplace);
 		return vehicles.put(vehicle, v);
 	}
 
