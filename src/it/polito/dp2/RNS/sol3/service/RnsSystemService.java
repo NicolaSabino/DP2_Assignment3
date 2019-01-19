@@ -58,14 +58,7 @@ public class RnsSystemService {
 		return db.updateVehiclePosition(vehicle);
 	}
 
-	public Places calculatePath(Vehicle vehicle, Place place) {
-		List<Place> list = db.calculatePath(vehicle,place);	// get the path from `db`
-		if(list == null)									// check the return value
-			return null;									// if null `vehicle` doesn't exist
-		Places places = new Places();						// create a new empty container
-		places.getPlace().addAll(list);						// add the whole list
-		return places;
-	}
+	
 
 	public Object deleteVehicle(String id) {
 		return db.deleteVehicle(id);

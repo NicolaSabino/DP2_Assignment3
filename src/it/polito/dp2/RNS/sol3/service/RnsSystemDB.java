@@ -252,11 +252,6 @@ public class RnsSystemDB {
 		return capacityInPlace.get(place);
 	}
 
-	public List<Place> calculatePath(Vehicle vehicle, Place place) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public void incrementPlace(String id) {
 		Integer capacity = capacityInPlace.get(id);
 		capacityInPlace.put(id, capacity.intValue()+1);

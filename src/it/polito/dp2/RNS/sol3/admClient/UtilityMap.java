@@ -19,7 +19,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.sun.org.apache.xml.internal.utils.WrongParserException;
+
 import it.polito.dp2.RNS.VehicleReader;
+import it.polito.dp2.RNS.lab3.WrongPlaceException;
 import it.polito.dp2.RNS.sol1.jaxb.Connection;
 import it.polito.dp2.RNS.sol1.jaxb.Connections;
 import it.polito.dp2.RNS.sol1.jaxb.Gate;
@@ -308,11 +312,16 @@ public class UtilityMap {
 	public VehicleReader getVehicle(String id) throws Exception {
 		System.out.println("Get Vehicle " + id);
 		Response r = this.getVehicle_(id);
+		if(r.getStatus() == Status.NOT_FOUND.getStatusCode()){
+			System.out.println(id+" not found!");
+			return null;
+			// `getVehicle() should return null if NOT FOUND
+		}
 		Vehicle v = r.readEntity(Vehicle.class);
 		IdentifiedEntityReader_ entity = new IdentifiedEntityReader_(v.getId());	// create a new entity
 		String pos = this.p_link_map.get(v.getPosition());							// convert position link to a a valid place
-		String ori = this.p_link_map.get(v.getPosition());							// convert origin link to a a valid place
-		String des = this.p_link_map.get(v.getPosition());							// convert destination link to a a valid place
+		String ori = this.p_link_map.get(v.getOrigin());							// convert origin link to a a valid place
+		String des = this.p_link_map.get(v.getDestination());						// convert destination link to a a valid place
 		PlaceReader_ position = this.p_map.get(pos);								// set the position in p_map
 		PlaceReader_ origin = this.p_map.get(ori);									// set the origin in p_map
 		PlaceReader_ destination = this.p_map.get(des);								// set the destination in p_map

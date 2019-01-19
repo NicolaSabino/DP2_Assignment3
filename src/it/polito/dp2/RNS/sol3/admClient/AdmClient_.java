@@ -20,6 +20,8 @@ import it.polito.dp2.RNS.VehicleReader;
 import it.polito.dp2.RNS.VehicleState;
 import it.polito.dp2.RNS.VehicleType;
 import it.polito.dp2.RNS.lab3.ServiceException;
+import it.polito.dp2.RNS.lab3.UnknownPlaceException;
+import it.polito.dp2.RNS.lab3.WrongPlaceException;
 
 
 /**
@@ -241,6 +243,7 @@ public class AdmClient_ implements it.polito.dp2.RNS.lab3.AdmClient {
 	 */
 	@Override
 	public VehicleReader getUpdatedVehicle(String id) throws ServiceException {
+		
 		VehicleReader vehicle = null;
 		try {
 			vehicle = this.utility.getVehicle(id);

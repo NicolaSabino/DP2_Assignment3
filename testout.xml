@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="4" failures="0" hostname="dp2-student" name="it.polito.dp2.RNS.lab3.tests.RnsTests" skipped="0" tests="6" time="2.044" timestamp="2019-01-19T02:42:46">
+<testsuite errors="0" failures="0" hostname="dp2-student" name="it.polito.dp2.RNS.lab3.tests.RnsTests" skipped="0" tests="6" time="4.676" timestamp="2019-01-19T16:07:25">
   <properties>
     <property name="it.polito.dp2.RNS.lab3.Neo4JURL" value="http://localhost:7474/db" />
     <property name="env.DESKTOP_SESSION" value="xfce" />
-    <property name="env.OLDPWD" value="/home/dp2" />
     <property name="file.encoding.pkg" value="sun.io" />
     <property name="java.home" value="/usr/lib/jvm/jdk1.8.0_141/jre" />
     <property name="custom.dir" value="/home/dp2/workspace/A3/custom" />
@@ -11,12 +10,11 @@
     <property name="sol.build.filepath" value="/home/dp2/workspace/A3/sol_build.xml" />
     <property name="env.QT_LINUX_ACCESSIBILITY_ALWAYS_ON" value="1" />
     <property name="env.GDM_LANG" value="en_US" />
-    <property name="env.DISPLAY" value=":0" />
-    <property name="env.LS_COLORS" value="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:" />
+    <property name="env.DISPLAY" value=":0.0" />
     <property name="debug" value="true" />
     <property name="env.XDG_VTNR" value="7" />
     <property name="Neo4JURL" value="http://localhost:7474/db" />
-    <property name="seed" value="12323" />
+    <property name="seed" value="1170659" />
     <property name="java.awt.headless" value="true" />
     <property name="env.GLADE_CATALOG_PATH" value=":" />
     <property name="env.XDG_GREETER_DATA_DIR" value="/var/lib/lightdm-data/dp2" />
@@ -35,10 +33,13 @@
     <property name="it.polito.dp2.RNS.lab2.URL" value="http://localhost:7474/db" />
     <property name="env.MANDATORY_PATH" value="/usr/share/gconf/xfce.mandatory.path" />
     <property name="java.version" value="1.8.0_141" />
+    <property name="eclipse.pdebuild.home" value="/home/dp2/Software/eclipse/plugins/org.eclipse.pde.build_3.9.200.v20160204-0642/.//" />
     <property name="gen.war.dir" value="/home/dp2/workspace/A3/war" />
-    <property name="it.polito.dp2.RNS.Random.seed" value="12323" />
+    <property name="it.polito.dp2.RNS.Random.seed" value="1170659" />
+    <property name="env.OXYGEN_DISABLE_INNER_SHADOWS_HACK" value="1" />
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/" />
     <property name="env.LANGUAGE" value="en_US" />
+    <property name="env.GDK_SCALE" value="1" />
     <property name="env.XDG_MENU_PREFIX" value="xfce-" />
     <property name="ant.project.invoked-targets" value="runFuncTest.real" />
     <property name="env.XDG_DATA_DIRS" value="/usr/share/xfce:/usr/share/xfce4:/usr/local/share:/usr/share:/var/lib/snapd/desktop:/usr/share" />
@@ -57,7 +58,6 @@
     <property name="java.specification.name" value="Java Platform API Specification" />
     <property name="env.GLADE_PIXMAP_PATH" value=":" />
     <property name="user.timezone" value="" />
-    <property name="env.LESSOPEN" value="| /usr/bin/lesspipe %s" />
     <property name="neo4j.location" value="/opt/neo4j-community-3.2.3" />
     <property name="it.polito.dp2.RNS.lab3.Neo4JSimpleXMLURL" value="http://localhost:8080/Neo4JSimpleXML/rest" />
     <property name="path.separator" value=":" />
@@ -69,21 +69,20 @@
     <property name="env.HOME" value="/home/dp2" />
     <property name="RnsInfo.RnsReaderFactory" value="it.polito.dp2.RNS.Random.RnsReaderFactoryImpl" />
     <property name="catalina.home.bin.dir" value="/opt/tomcat/apache-tomcat-8.5.20/bin" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner it.polito.dp2.RNS.lab3.tests.RnsTests methods=testGetPlaces,testGetParkingAreas,testVehicleLifecycle,testVehicleLifecycle2,testUnknownPlace,testWrongPlace skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/dp2/workspace/A3/testout.xml formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter crashfile=/home/dp2/workspace/A3/junitvmwatcher233452024565260145.properties propsfile=/home/dp2/workspace/A3/junit1023679684602426800.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner it.polito.dp2.RNS.lab3.tests.RnsTests methods=testGetPlaces,testGetParkingAreas,testVehicleLifecycle,testVehicleLifecycle2,testUnknownPlace,testWrongPlace skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/dp2/workspace/A3/testout.xml formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter crashfile=/home/dp2/workspace/A3/junitvmwatcher2145617872563676802.properties propsfile=/home/dp2/workspace/A3/junit4294277955745500755.properties" />
     <property name="tomcatUrl" value="http://localhost:8080/manager/text" />
     <property name="ant.file" value="/home/dp2/workspace/A3/build.xml" />
     <property name="env.LC_TELEPHONE" value="it_IT.UTF-8" />
-    <property name="env._" value="/opt/apache-ant-1.9.13/bin/ant" />
     <property name="env.GTK2_MODULES" value="overlay-scrollbar" />
     <property name="java.io.tmpdir" value="/tmp" />
     <property name="env.LC_IDENTIFICATION" value="it_IT.UTF-8" />
     <property name="env.GNOME_KEYRING_PID" value="" />
+    <property name="TODAY" value="January 19 2019" />
     <property name="user.language" value="en" />
     <property name="env.UPSTART_EVENTS" value="started xsession" />
     <property name="line.separator" value="&#xa;" />
     <property name="target" value="1.8" />
     <property name="server.location" value="/opt/tomcat/apache-tomcat-8.5.20" />
-    <property name="ant.file.type" value="file" />
     <property name="env.SSH_AGENT_PID" value="1935" />
     <property name="env.CLUTTER_IM_MODULE" value="" />
     <property name="env.GLADE_MODULE_PATH" value=":" />
@@ -102,36 +101,36 @@
     <property name="ant.file.neo4j-build" value="/home/dp2/workspace/A3/neo4j-build.xml" />
     <property name="env.LC_TIME" value="it_IT.UTF-8" />
     <property name="env.GDMSESSION" value="xfce" />
+    <property name="eclipse.pdebuild.templates" value="/home/dp2/Software/eclipse/plugins/org.eclipse.pde.build_3.9.200.v20160204-0642/templates//" />
     <property name="shared.location" value="/opt/dp2/shared" />
     <property name="env.QT_ACCESSIBILITY" value="1" />
     <property name="env.XDG_SESSION_DESKTOP" value="xfce" />
     <property name="java.awt.printerjob" value="sun.print.PSPrinterJob" />
-    <property name="env.VTE_VERSION" value="4205" />
     <property name="env.DEFAULTS_PATH" value="/usr/share/gconf/xfce.default.path" />
+    <property name="env.GDK_CORE_DEVICE_EVENTS" value="1" />
     <property name="catalina.home" value="/opt/tomcat/apache-tomcat-8.5.20/bin/.." />
-    <property name="ant.version" value="Apache Ant(TM) version 1.9.13 compiled on July 10 2018" />
+    <property name="ant.version" value="Apache Ant(TM) version 1.9.6 compiled on June 29 2015" />
     <property name="env.XDG_SESSION_TYPE" value="x11" />
-    <property name="env.WINDOWID" value="73400326" />
     <property name="env.XDG_SESSION_PATH" value="/org/freedesktop/DisplayManager/Session0" />
     <property name="env.JOB" value="dbus" />
     <property name="os.name" value="Linux" />
     <property name="java.specification.vendor" value="Oracle Corporation" />
     <property name="ant.file.type.catalina-tasks" value="file" />
     <property name="ant.file.type.neo4j-build" value="file" />
-    <property name="env.TERM" value="xterm-256color" />
     <property name="java.vm.name" value="Java HotSpot(TM) Server VM" />
     <property name="env.QT_IM_MODULE" value="" />
     <property name="lab3.location" value="/home/dp2/workspace/A3" />
-    <property name="java.library.path" value="/usr/java/packages/lib/i386:/lib:/usr/lib" />
+    <property name="java.library.path" value="/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386/server:/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386:/usr/lib/jvm/jdk1.8.0_141/jre/../lib/i386:/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386/client:/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386::/usr/java/packages/lib/i386:/lib:/usr/lib" />
     <property name="env.PATH" value="/home/dp2/bin:/home/dp2/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/tomcat/apache-tomcat-8.5.20/bin:/usr/lib/jvm/jdk1.8.0_141/bin:/opt/apache-ant-1.9.13/bin:/snap/bin" />
-    <property name="env.LESSCLOSE" value="/usr/bin/lesspipe %s %s" />
+    <property name="eclipse.pdebuild.scripts" value="/home/dp2/Software/eclipse/plugins/org.eclipse.pde.build_3.9.200.v20160204-0642/scripts//" />
     <property name="ant.java.version" value="1.8" />
     <property name="basedir" value="/home/dp2/workspace/A3" />
     <property name="java.class.version" value="52.0" />
-    <property name="env.SHLVL" value="1" />
+    <property name="env.SHLVL" value="0" />
+    <property name="env.LD_LIBRARY_PATH" value="/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386/server:/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386:/usr/lib/jvm/jdk1.8.0_141/jre/../lib/i386:/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386/client:/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386:" />
     <property name="ext.lib.dir" value="/opt/dp2/shared/lib" />
     <property name="sol.zip" value="lab3.zip" />
-    <property name="ant.home" value="/opt/apache-ant-1.9.13" />
+    <property name="ant.home" value="/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327" />
     <property name="env.UPSTART_JOB" value="startxfce4" />
     <property name="sun.boot.library.path" value="/usr/lib/jvm/jdk1.8.0_141/jre/lib/i386" />
     <property name="build.dir" value="/home/dp2/workspace/A3/build" />
@@ -152,8 +151,8 @@
     <property name="java.ext.dirs" value="/usr/lib/jvm/jdk1.8.0_141/jre/lib/ext:/usr/java/packages/lib/ext" />
     <property name="os.version" value="4.15.0-34-generic" />
     <property name="env.QT_QPA_PLATFORMTHEME" value="appmenu-qt5" />
-    <property name="env.XDG_CURRENT_DESKTOP" value="XFCE" />
     <property name="user.home" value="/home/dp2" />
+    <property name="env.XDG_CURRENT_DESKTOP" value="XFCE" />
     <property name="test.class" value="it.polito.dp2.RNS.lab3.tests.RnsTests" />
     <property name="java.vm.vendor" value="Oracle Corporation" />
     <property name="env.JAVA_HOME" value="/usr/lib/jvm/jdk1.8.0_141" />
@@ -162,24 +161,27 @@
     <property name="env.XAUTHORITY" value="/home/dp2/.Xauthority" />
     <property name="user.dir" value="/home/dp2/workspace/A3" />
     <property name="env.XFILESEARCHPATH" value="/usr/dt/app-defaults/%L/Dt" />
-    <property name="env.PWD" value="/home/dp2/workspace/A3" />
+    <property name="env.PWD" value="/home/dp2" />
+    <property name="env.LIBOVERLAY_SCROLLBAR" value="0" />
     <property name="sun.cpu.endian" value="little" />
     <property name="sol3.dir" value="src/it/polito/dp2/RNS/sol3" />
     <property name="it.polito.dp2.RNS.RnsClientFactory" value="it.polito.dp2.RNS.sol3.client1.RnsClientFactory" />
     <property name="it.polito.dp2.RNS.lab3.URL" value="http://localhost:8080/RnsSystem/rest" />
     <property name="tomcatPort" value="8080" />
     <property name="java.vm.version" value="25.141-b15" />
-    <property name="java.class.path" value="/home/dp2/workspace/A3/build:/home/dp2/workspace/A3/lib/RNS.jar:/home/dp2/workspace/A3/lib/RNSRandom.jar:/home/dp2/workspace/A3/lib/hamcrest-core-1.3.jar:/home/dp2/workspace/A3/lib/junit-4.12.jar:/home/dp2/workspace/A3/lib/lab1.jar:/home/dp2/workspace/A3/lib/lab3.jar:/home/dp2/workspace/A3/lib/swagger-annotations-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-core-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-jaxrs-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-jersey2-jaxrs-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-models-1.5.0.jar:/opt/dp2/shared/lib/activation-1.1.jar:/opt/dp2/shared/lib/annotations-2.0.1.jar:/opt/dp2/shared/lib/aopalliance-repackaged-2.5.0-b32.jar:/opt/dp2/shared/lib/codemodel-2.6.jar:/opt/dp2/shared/lib/commons-lang-2.6.jar:/opt/dp2/shared/lib/commons-lang3-3.2.1.jar:/opt/dp2/shared/lib/comresrcgen-1.0.jar:/opt/dp2/shared/lib/gson-2.2.4.jar:/opt/dp2/shared/lib/guava-15.0.jar:/opt/dp2/shared/lib/hk2-api-2.5.0-b32.jar:/opt/dp2/shared/lib/hk2-locator-2.5.0-b32.jar:/opt/dp2/shared/lib/hk2-utils-2.5.0-b32.jar:/opt/dp2/shared/lib/istack-commons-runtime-2.21.jar:/opt/dp2/shared/lib/istack-commons-tools-2.21.jar:/opt/dp2/shared/lib/jackson-annotations-2.4.0.jar:/opt/dp2/shared/lib/jackson-core-2.4.2.jar:/opt/dp2/shared/lib/jackson-core-asl-1.9.11.jar:/opt/dp2/shared/lib/jackson-databind-2.4.2.jar:/opt/dp2/shared/lib/jackson-dataformat-xml-2.4.2.jar:/opt/dp2/shared/lib/jackson-dataformat-yaml-2.4.2.jar:/opt/dp2/shared/lib/jackson-datatype-joda-2.4.2.jar:/opt/dp2/shared/lib/jackson-jaxrs-base-2.4.2.jar:/opt/dp2/shared/lib/jackson-jaxrs-json-provider-2.4.2.jar:/opt/dp2/shared/lib/jackson-mapper-asl-1.9.11.jar:/opt/dp2/shared/lib/jackson-module-jaxb-annotations-2.4.2.jar:/opt/dp2/shared/lib/javassist-3.20.0-GA.jar:/opt/dp2/shared/lib/javax.annotation-api-1.2.jar:/opt/dp2/shared/lib/javax.inject-2.5.0-b32.jar:/opt/dp2/shared/lib/javax.json-1.0.4.jar:/opt/dp2/shared/lib/javax.ws.rs-api-2.0.1.jar:/opt/dp2/shared/lib/jaxb-api-2.2.12-b140109.1041.jar:/opt/dp2/shared/lib/jaxb-core-2.2.11.jar:/opt/dp2/shared/lib/jaxb-runtime-2.2.11.jar:/opt/dp2/shared/lib/jaxb-xjc-2.2.11.jar:/opt/dp2/shared/lib/jersey-client-1.19.1.jar:/opt/dp2/shared/lib/jersey-client-2.25.1.jar:/opt/dp2/shared/lib/jersey-common-2.25.1.jar:/opt/dp2/shared/lib/jersey-container-servlet-2.25.1.jar:/opt/dp2/shared/lib/jersey-container-servlet-core-2.25.1.jar:/opt/dp2/shared/lib/jersey-core-1.19.1.jar:/opt/dp2/shared/lib/jersey-entity-filtering-2.25.1.jar:/opt/dp2/shared/lib/jersey-guava-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-jaxb-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-moxy-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-multipart-2.25.1.jar:/opt/dp2/shared/lib/jersey-server-2.25.1.jar:/opt/dp2/shared/lib/joda-time-2.2.jar:/opt/dp2/shared/lib/json-simple-1.1.jar:/opt/dp2/shared/lib/jsonschema2pojo-core-0.4.0.jar:/opt/dp2/shared/lib/localizer-1.0.jar:/opt/dp2/shared/lib/mimepull-1.9.6.jar:/opt/dp2/shared/lib/org.eclipse.persistence.asm-2.6.0.jar:/opt/dp2/shared/lib/org.eclipse.persistence.core-2.6.0.jar:/opt/dp2/shared/lib/org.eclipse.persistence.moxy-2.6.0.jar:/opt/dp2/shared/lib/osgi-resource-locator-1.0.1.jar:/opt/dp2/shared/lib/reflections-0.9.9.jar:/opt/dp2/shared/lib/rngom-2.2.11.jar:/opt/dp2/shared/lib/slf4j-api-1.6.3.jar:/opt/dp2/shared/lib/stax2-api-3.1.4.jar:/opt/dp2/shared/lib/txw2-2.2.11.jar:/opt/dp2/shared/lib/validation-api-1.1.0.Final.jar:/opt/dp2/shared/lib/wadl-ant-1.1.6.jar:/opt/dp2/shared/lib/wadl-core-1.1.6.jar:/opt/dp2/shared/lib/wadl-xslt-1.1.6.jar:/opt/dp2/shared/lib/xsom-20140925.jar:/opt/apache-ant-1.9.13/lib/ant-launcher.jar:/opt/apache-ant-1.9.13/lib/ant.jar:/opt/apache-ant-1.9.13/lib/ant-junit.jar:/opt/apache-ant-1.9.13/lib/ant-junit4.jar" />
+    <property name="java.class.path" value="/home/dp2/workspace/A3/build:/home/dp2/workspace/A3/lib/RNS.jar:/home/dp2/workspace/A3/lib/RNSRandom.jar:/home/dp2/workspace/A3/lib/hamcrest-core-1.3.jar:/home/dp2/workspace/A3/lib/junit-4.12.jar:/home/dp2/workspace/A3/lib/lab1.jar:/home/dp2/workspace/A3/lib/lab3.jar:/home/dp2/workspace/A3/lib/swagger-annotations-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-core-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-jaxrs-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-jersey2-jaxrs-1.5.0.jar:/home/dp2/workspace/A3/lib/swagger-models-1.5.0.jar:/opt/dp2/shared/lib/activation-1.1.jar:/opt/dp2/shared/lib/annotations-2.0.1.jar:/opt/dp2/shared/lib/aopalliance-repackaged-2.5.0-b32.jar:/opt/dp2/shared/lib/codemodel-2.6.jar:/opt/dp2/shared/lib/commons-lang-2.6.jar:/opt/dp2/shared/lib/commons-lang3-3.2.1.jar:/opt/dp2/shared/lib/comresrcgen-1.0.jar:/opt/dp2/shared/lib/gson-2.2.4.jar:/opt/dp2/shared/lib/guava-15.0.jar:/opt/dp2/shared/lib/hk2-api-2.5.0-b32.jar:/opt/dp2/shared/lib/hk2-locator-2.5.0-b32.jar:/opt/dp2/shared/lib/hk2-utils-2.5.0-b32.jar:/opt/dp2/shared/lib/istack-commons-runtime-2.21.jar:/opt/dp2/shared/lib/istack-commons-tools-2.21.jar:/opt/dp2/shared/lib/jackson-annotations-2.4.0.jar:/opt/dp2/shared/lib/jackson-core-2.4.2.jar:/opt/dp2/shared/lib/jackson-core-asl-1.9.11.jar:/opt/dp2/shared/lib/jackson-databind-2.4.2.jar:/opt/dp2/shared/lib/jackson-dataformat-xml-2.4.2.jar:/opt/dp2/shared/lib/jackson-dataformat-yaml-2.4.2.jar:/opt/dp2/shared/lib/jackson-datatype-joda-2.4.2.jar:/opt/dp2/shared/lib/jackson-jaxrs-base-2.4.2.jar:/opt/dp2/shared/lib/jackson-jaxrs-json-provider-2.4.2.jar:/opt/dp2/shared/lib/jackson-mapper-asl-1.9.11.jar:/opt/dp2/shared/lib/jackson-module-jaxb-annotations-2.4.2.jar:/opt/dp2/shared/lib/javassist-3.20.0-GA.jar:/opt/dp2/shared/lib/javax.annotation-api-1.2.jar:/opt/dp2/shared/lib/javax.inject-2.5.0-b32.jar:/opt/dp2/shared/lib/javax.json-1.0.4.jar:/opt/dp2/shared/lib/javax.ws.rs-api-2.0.1.jar:/opt/dp2/shared/lib/jaxb-api-2.2.12-b140109.1041.jar:/opt/dp2/shared/lib/jaxb-core-2.2.11.jar:/opt/dp2/shared/lib/jaxb-runtime-2.2.11.jar:/opt/dp2/shared/lib/jaxb-xjc-2.2.11.jar:/opt/dp2/shared/lib/jersey-client-1.19.1.jar:/opt/dp2/shared/lib/jersey-client-2.25.1.jar:/opt/dp2/shared/lib/jersey-common-2.25.1.jar:/opt/dp2/shared/lib/jersey-container-servlet-2.25.1.jar:/opt/dp2/shared/lib/jersey-container-servlet-core-2.25.1.jar:/opt/dp2/shared/lib/jersey-core-1.19.1.jar:/opt/dp2/shared/lib/jersey-entity-filtering-2.25.1.jar:/opt/dp2/shared/lib/jersey-guava-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-jaxb-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-moxy-2.25.1.jar:/opt/dp2/shared/lib/jersey-media-multipart-2.25.1.jar:/opt/dp2/shared/lib/jersey-server-2.25.1.jar:/opt/dp2/shared/lib/joda-time-2.2.jar:/opt/dp2/shared/lib/json-simple-1.1.jar:/opt/dp2/shared/lib/jsonschema2pojo-core-0.4.0.jar:/opt/dp2/shared/lib/localizer-1.0.jar:/opt/dp2/shared/lib/mimepull-1.9.6.jar:/opt/dp2/shared/lib/org.eclipse.persistence.asm-2.6.0.jar:/opt/dp2/shared/lib/org.eclipse.persistence.core-2.6.0.jar:/opt/dp2/shared/lib/org.eclipse.persistence.moxy-2.6.0.jar:/opt/dp2/shared/lib/osgi-resource-locator-1.0.1.jar:/opt/dp2/shared/lib/reflections-0.9.9.jar:/opt/dp2/shared/lib/rngom-2.2.11.jar:/opt/dp2/shared/lib/slf4j-api-1.6.3.jar:/opt/dp2/shared/lib/stax2-api-3.1.4.jar:/opt/dp2/shared/lib/txw2-2.2.11.jar:/opt/dp2/shared/lib/validation-api-1.1.0.Final.jar:/opt/dp2/shared/lib/wadl-ant-1.1.6.jar:/opt/dp2/shared/lib/wadl-core-1.1.6.jar:/opt/dp2/shared/lib/wadl-xslt-1.1.6.jar:/opt/dp2/shared/lib/xsom-20140925.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant-launcher.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant-junit.jar:/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant-junit4.jar" />
+    <property name="DSTAMP" value="20190119" />
     <property name="env.LC_ADDRESS" value="it_IT.UTF-8" />
-    <property name="ant.library.dir" value="/opt/apache-ant-1.9.13/lib" />
+    <property name="ant.library.dir" value="/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib" />
     <property name="os.arch" value="i386" />
     <property name="env.LC_NUMERIC" value="it_IT.UTF-8" />
     <property name="tomcatPassword" value="root" />
     <property name="sun.java.launcher" value="SUN_STANDARD" />
-    <property name="ant.core.lib" value="/opt/apache-ant-1.9.13/lib/ant.jar" />
+    <property name="ant.core.lib" value="/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327/lib/ant.jar" />
     <property name="java.vm.specification.vendor" value="Oracle Corporation" />
     <property name="env.UPSTART_INSTANCE" value="" />
     <property name="URL" value="http://localhost:8080/RnsSystem/rest" />
+    <property name="TSTAMP" value="1706" />
     <property name="exit.code2" value="125" />
     <property name="file.separator" value="/" />
     <property name="exit.code1" value="126" />
@@ -190,7 +192,7 @@
     <property name="env.XDG_RUNTIME_DIR" value="/run/user/1000" />
     <property name="env.XDG_CONFIG_DIRS" value="/etc/xdg/xdg-xfce:/usr/share/upstart/xdg:/etc/xdg:/etc/xdg" />
     <property name="user.country" value="US" />
-    <property name="env.ANT_HOME" value="/opt/apache-ant-1.9.13" />
+    <property name="env.ANT_HOME" value="/home/dp2/Software/eclipse/plugins/org.apache.ant_1.9.6.v201510161327" />
     <property name="env.SHELL" value="/bin/bash" />
     <property name="env.INSTANCE" value="" />
     <property name="xsd.dir" value="/home/dp2/workspace/A3/xsd" />
@@ -202,57 +204,110 @@
     <property name="ant.file.type.tomcat-build" value="file" />
     <property name="sun.arch.data.model" value="32" />
   </properties>
-  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testWrongPlace" time="0.259">
-    <error message="Unexpected exception, expected&lt;it.polito.dp2.RNS.lab3.WrongPlaceException&gt; but was&lt;it.polito.dp2.RNS.lab3.ServiceException&gt;" type="java.lang.Exception">java.lang.Exception: Unexpected exception, expected&lt;it.polito.dp2.RNS.lab3.WrongPlaceException&gt; but was&lt;it.polito.dp2.RNS.lab3.ServiceException&gt;
-Caused by: it.polito.dp2.RNS.lab3.ServiceException
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:249)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testWrongPlace(RnsTests.java:203)
-</error>
-  </testcase>
-  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testUnknownPlace" time="0.173">
-    <error message="Unexpected exception, expected&lt;it.polito.dp2.RNS.lab3.UnknownPlaceException&gt; but was&lt;it.polito.dp2.RNS.lab3.ServiceException&gt;" type="java.lang.Exception">java.lang.Exception: Unexpected exception, expected&lt;it.polito.dp2.RNS.lab3.UnknownPlaceException&gt; but was&lt;it.polito.dp2.RNS.lab3.ServiceException&gt;
-Caused by: it.polito.dp2.RNS.lab3.ServiceException
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:249)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testUnknownPlace(RnsTests.java:188)
-</error>
-  </testcase>
-  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testVehicleLifecycle2" time="0.306">
-    <error type="it.polito.dp2.RNS.lab3.ServiceException">it.polito.dp2.RNS.lab3.ServiceException
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:249)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testVehicleLifecycle2(RnsTests.java:150)
-</error>
-  </testcase>
-  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testVehicleLifecycle" time="0.149">
-    <error type="it.polito.dp2.RNS.lab3.ServiceException">it.polito.dp2.RNS.lab3.ServiceException
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:249)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testVehicleLifecycle(RnsTests.java:120)
-</error>
-  </testcase>
-  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testGetParkingAreas" time="0.001" />
-  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testGetPlaces" time="0.001" />
-  <system-out><![CDATA[Random RnsReader: Using seed: 12323
+  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testWrongPlace" time="0.439" />
+  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testUnknownPlace" time="0.264" />
+  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testVehicleLifecycle2" time="1.529" />
+  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testVehicleLifecycle" time="1.23" />
+  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testGetParkingAreas" time="0.003" />
+  <testcase classname="it.polito.dp2.RNS.lab3.tests.RnsTests" name="testGetPlaces" time="0.009" />
+  <system-out><![CDATA[Random RnsReader: Using seed: 1170659
 Random RnsReader: Test case: 1
 
 
 
 
 Get Vehicle AC123CD
+AC123CD not found!
+sto inserendo un veicolo
 Get Vehicle AC123CD
+AC123CD not found!
+sto inserendo un veicolo
 Get Vehicle AB456CD
+AB456CD not found!
+Get Vehicle AB789CD
+AB789CD not found!
+sto inserendo un veicolo
+Get Vehicle AB456CD
+Get Vehicle AB456CD
+sto inserendo un veicolo
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+Get Vehicle AB789CD
+Get Vehicle AB456CD
+AB456CD not found!
+Get Vehicle AB789CD
+Get Vehicle AB789CD
+AB789CD not found!
+Get Vehicle AB456CD
+AB456CD not found!
+Get Vehicle AB789CD
+AB789CD not found!
 Get Vehicle AB123CD
+AB123CD not found!
+sto inserendo un veicolo
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+Get Vehicle AB123CD
+AB123CD not found!
+Get Vehicle AB123CD
+AB123CD not found!
 Comparing place PA000
+Comparing place PA001
 Comparing place A0-S0
 Comparing place A0-S0
 Comparing place A0-S1
 Comparing place A0-S1
 Comparing place A0-S2
 Comparing place A0-S2
-Comparing place A1-S0
-Comparing place A1-S0
-Comparing place A1-S1
-Comparing place A1-S1
-Comparing place A1-S2
-Comparing place A1-S2
+Comparing place A0-S3
+Comparing place A0-S3
+Comparing place A0-S4
+Comparing place A0-S4
+Comparing place A0-S5
+Comparing place A0-S5
+Comparing place A0-S6
+Comparing place A0-S6
+Comparing place A0-S7
+Comparing place A0-S7
+Comparing place A0-S8
+Comparing place A0-S8
 Comparing place Gate0
 Comparing place Gate0
 Comparing place Gate1
@@ -261,184 +316,14 @@ Comparing place Gate2
 Comparing place Gate2
 Comparing place PA000
 Comparing place PA000
-Comparing place SP0-S0
-Comparing place SP0-S0
-Comparing place SP0-S1
-Comparing place SP0-S1
-Comparing place SP0-S2
-Comparing place SP0-S2
-Comparing place SP0-S3
-Comparing place SP0-S3
-Comparing place SP0-S4
-Comparing place SP0-S4
-Comparing place SP0-S5
-Comparing place SP0-S5
-Comparing place SP0-S6
-Comparing place SP0-S6
-Comparing place SP0-S7
-Comparing place SP0-S7
+Comparing place PA001
+Comparing place PA001
+Comparing place SS0-S0
+Comparing place SS0-S0
+Comparing place SS0-S1
+Comparing place SS0-S1
+Comparing place SS0-S2
+Comparing place SS0-S2
 ]]></system-out>
-  <system-err><![CDATA[org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException: MessageBodyReader not found for media type=text/html;charset=utf-8, type=class it.polito.dp2.RNS.sol1.jaxb.Vehicle, genericType=class it.polito.dp2.RNS.sol1.jaxb.Vehicle.
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor$TerminalReaderInterceptor.aroundReadFrom(ReaderInterceptorExecutor.java:231)
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor.proceed(ReaderInterceptorExecutor.java:155)
-	at org.glassfish.jersey.message.internal.MessageBodyFactory.readFrom(MessageBodyFactory.java:1085)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:874)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:808)
-	at org.glassfish.jersey.client.ClientResponse.readEntity(ClientResponse.java:326)
-	at org.glassfish.jersey.client.InboundJaxrsResponse$1.call(InboundJaxrsResponse.java:115)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
-	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:419)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.runInScopeIfPossible(InboundJaxrsResponse.java:267)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.readEntity(InboundJaxrsResponse.java:112)
-	at it.polito.dp2.RNS.sol3.admClient.UtilityMap.getVehicle(UtilityMap.java:311)
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:246)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testWrongPlace(RnsTests.java:203)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:19)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:107)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:536)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1178)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1032)
-org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException: MessageBodyReader not found for media type=text/html;charset=utf-8, type=class it.polito.dp2.RNS.sol1.jaxb.Vehicle, genericType=class it.polito.dp2.RNS.sol1.jaxb.Vehicle.
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor$TerminalReaderInterceptor.aroundReadFrom(ReaderInterceptorExecutor.java:231)
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor.proceed(ReaderInterceptorExecutor.java:155)
-	at org.glassfish.jersey.message.internal.MessageBodyFactory.readFrom(MessageBodyFactory.java:1085)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:874)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:808)
-	at org.glassfish.jersey.client.ClientResponse.readEntity(ClientResponse.java:326)
-	at org.glassfish.jersey.client.InboundJaxrsResponse$1.call(InboundJaxrsResponse.java:115)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
-	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:419)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.runInScopeIfPossible(InboundJaxrsResponse.java:267)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.readEntity(InboundJaxrsResponse.java:112)
-	at it.polito.dp2.RNS.sol3.admClient.UtilityMap.getVehicle(UtilityMap.java:311)
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:246)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testUnknownPlace(RnsTests.java:188)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.internal.runners.statements.ExpectException.evaluate(ExpectException.java:19)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:107)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:536)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1178)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1032)
-org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException: MessageBodyReader not found for media type=text/html;charset=utf-8, type=class it.polito.dp2.RNS.sol1.jaxb.Vehicle, genericType=class it.polito.dp2.RNS.sol1.jaxb.Vehicle.
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor$TerminalReaderInterceptor.aroundReadFrom(ReaderInterceptorExecutor.java:231)
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor.proceed(ReaderInterceptorExecutor.java:155)
-	at org.glassfish.jersey.message.internal.MessageBodyFactory.readFrom(MessageBodyFactory.java:1085)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:874)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:808)
-	at org.glassfish.jersey.client.ClientResponse.readEntity(ClientResponse.java:326)
-	at org.glassfish.jersey.client.InboundJaxrsResponse$1.call(InboundJaxrsResponse.java:115)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
-	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:419)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.runInScopeIfPossible(InboundJaxrsResponse.java:267)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.readEntity(InboundJaxrsResponse.java:112)
-	at it.polito.dp2.RNS.sol3.admClient.UtilityMap.getVehicle(UtilityMap.java:311)
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:246)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testVehicleLifecycle2(RnsTests.java:150)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:107)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:536)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1178)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1032)
-org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException: MessageBodyReader not found for media type=text/html;charset=utf-8, type=class it.polito.dp2.RNS.sol1.jaxb.Vehicle, genericType=class it.polito.dp2.RNS.sol1.jaxb.Vehicle.
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor$TerminalReaderInterceptor.aroundReadFrom(ReaderInterceptorExecutor.java:231)
-	at org.glassfish.jersey.message.internal.ReaderInterceptorExecutor.proceed(ReaderInterceptorExecutor.java:155)
-	at org.glassfish.jersey.message.internal.MessageBodyFactory.readFrom(MessageBodyFactory.java:1085)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:874)
-	at org.glassfish.jersey.message.internal.InboundMessageContext.readEntity(InboundMessageContext.java:808)
-	at org.glassfish.jersey.client.ClientResponse.readEntity(ClientResponse.java:326)
-	at org.glassfish.jersey.client.InboundJaxrsResponse$1.call(InboundJaxrsResponse.java:115)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
-	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:419)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.runInScopeIfPossible(InboundJaxrsResponse.java:267)
-	at org.glassfish.jersey.client.InboundJaxrsResponse.readEntity(InboundJaxrsResponse.java:112)
-	at it.polito.dp2.RNS.sol3.admClient.UtilityMap.getVehicle(UtilityMap.java:311)
-	at it.polito.dp2.RNS.sol3.admClient.AdmClient_.getUpdatedVehicle(AdmClient_.java:246)
-	at it.polito.dp2.RNS.lab3.tests.RnsTests.testVehicleLifecycle(RnsTests.java:120)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:107)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:536)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1178)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1032)
-]]></system-err>
+  <system-err><![CDATA[]]></system-err>
 </testsuite>

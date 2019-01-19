@@ -1,6 +1,7 @@
 package it.polito.dp2.RNS.sol3.vehClient;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 		}
 		this.resources.put("places", UriBuilder.fromUri(system.getPlaces()).build());
 		this.resources.put("connections", UriBuilder.fromUri(system.getConnections()).build());
+		this.resources.put("vehicles", UriBuilder.fromUri(system.getVehicles()).build());
 		
 		Places places = null;
 		try {
@@ -81,6 +83,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 	@Override
 	public List<String> enter(String plateId, VehicleType type, String inGate, String destination)
 			throws ServiceException, UnknownPlaceException, WrongPlaceException, EntranceRefusedException {
+		System.out.println("sto inserendo un veicolo");
 		Vehicle v = new Vehicle();
 		v.setId(plateId);
 		v.setType(VType.valueOf(type.toString()));
@@ -100,20 +103,21 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 		
 		// check error codes
 		int code = result.getStatus();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("ORIGIN IS NOT PRESENT IN THE SYSTEM"))
+		if(code == Status.NOT_FOUND.getStatusCode())
 			throw new UnknownPlaceException();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("DESTINATION IS NOT PRESENT IN THE SYSTEM"))
-			throw new UnknownPlaceException();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("ORIGIN IS NOT A GATE"))
+		if(code == Status.CONFLICT.getStatusCode())
 			throw new WrongPlaceException();
-		if(code == Status.FORBIDDEN.getStatusCode() && result.readEntity(String.class).matches("ORIGIN IS NO A VAILD GATE"))
-			throw new WrongPlaceException();
-		if(code != Status.OK.getStatusCode())
+		if(code == Status.FORBIDDEN.getStatusCode())
 			throw new EntranceRefusedException();
 		
 		ShortestPath path= result.readEntity(ShortestPath.class);
+		// convert uri into identifier
+		List<String> list = new ArrayList<>();
+		for(String uri : path.getPlace()){
+			list.add(this.place_link_map.get(uri));
+		}
 		this.plateID = plateId;
-		return path.getPlace();
+		return list;
 	}
 
 	/**
@@ -124,7 +128,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 	 * @return the new suggested path (the list of the ids of the places of the new suggested path) or null if the suggested path has not changed
 	 * @throws ServiceException if the operation cannot be completed because the RNS service is not reachable or not working
 	 * @throws UnknownPlaceException if newPlace is not the id of a known place
-	 * @throws WrongPlaceException if newPlace is not is not the id of a place reachable from the previous position of the vehicle
+	 * @throws WrongPlaceException if newPlace is not the id of a place reachable from the previous position of the vehicle
 	 */
 	@Override
 	public List<String> move(String newPlace) throws ServiceException, UnknownPlaceException, WrongPlaceException {
@@ -144,18 +148,16 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 		List<String> res = null;
 		// check error codes
 		int code = result.getStatus();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("POSITION NOT PRESENT IN THE SYSTEM"))
+		if(code == Status.NOT_FOUND.getStatusCode())
 			throw new UnknownPlaceException();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("NOT REACHABLE FROM PREVIOUS POSITION"))
+		if(code == Status.CONFLICT.getStatusCode())
 			throw new WrongPlaceException();
-		//if(code != Status.OK.getStatusCode())
-		//	throw new Exception();
+		if(code == Status.OK.getStatusCode())
+			res= result.readEntity(ShortestPath.class).getPlace();
 		if(code == Status.NO_CONTENT.getStatusCode())
 			res = null;
-		if(code == Status.OK.getStatusCode()){
-			res= result.readEntity(ShortestPath.class).getPlace();
-		}
 		return res;
+		
 	}
 
 	/**
