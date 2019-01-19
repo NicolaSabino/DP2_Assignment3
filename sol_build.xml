@@ -9,11 +9,16 @@
 	<property name="build.dir" location="${basedir}/build"/>
 	<property name="schema.dir" location="${basedir}/xsd" />
 	<property name="gen.src" location="${basedir}/gen-src"/>
+	<property name="src" location="${basedir}/src"/>
 	<property name="pack1" value="it.polito.dp2.RNS.sol1.jaxb"/>
 	<property name="pack2" value="it.polito.dp2.RNS.rest.jaxb"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="shared.location" location="/opt/dp2/shared"/>
 	<property name="ext.lib.dir" location="${shared.location}/lib" />
+	<property name="adm.dir" location="${basedir}/src/it/polito/dp2/RNS/sol3/admClient" />
+	<property name="veh.dir" location="${basedir}/src/it/polito/dp2/RNS/sol3/vehClient" />
+	<property name="ser.dir" location="${basedir}/src/it/polito/dp2/RNS/sol3/service" />
+		
 	
 	<!-- The classpath to be used for compilation of the solution -->
 	<path id="RNS.classpath">
@@ -24,46 +29,64 @@
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
-
 	
-	<!-- generate java classes from rnsInfo.xsd -->
-	<target name="generate_lab1">
-		<echo message="generate java classes from rnsInfo.xsd " />
-		<mkdir dir="${basedir}/gen-src"/>
-		<exec executable="xjc" failonerror="true" >
-			<arg line="-d ${gen.src} -p ${pack1} ${schema.dir}/rnsInfo.xsd"/>
+	<!-- generate bindings -->
+	<target name="generate-bindings" depends="myclean">
+		<mkdir dir="${gen.src}" />
+		<exec executable="xjc" failonerror="true">
+			<arg value="-d" />
+			<arg value="${gen.src}" />
+			<arg value="-p" />
+			<arg value="${pack1}" />
+			<arg value="${schema.dir}/rnsInfo.xsd" />
+		</exec>
+		<exec executable="xjc" failonerror="true">
+			<arg value="-d" />
+			<arg value="${gen.src}" />
+			<arg value="-p" />
+			<arg value="${pack2}" />
+			<arg value="${custom.dir}/DataTypes.xsd" />
 		</exec>
 	</target>
-	
-	<!-- generate java classes from DataTypes.xsd -->
-	<target name="generate_lab2">
-		<echo message="generate java classes from DataTypes.xsd" />
-		<mkdir dir="${basedir}/gen-src"/>
-		<exec executable="xjc">
-			<arg line="-d gen-src -p ${pack2} ${custom.dir}/DataTypes.xsd"/>
-		</exec>
-	</target>
-	
-	<target name="build-service"  depends="myclean,generate_lab1, generate_lab2">
+	<!-- build service -->
+	<target name="build-service"  depends="generate-bindings,build">
 		<echo message="Compiling ${pack1} and ${pack2}..." />
 		<mkdir dir="${build.dir}"/>
 		<javac destdir="build" debug="on" includeantruntime="false">
-			<src path="gen-src" />
+			<src path="${gen.src}" />
 			<classpath refid="RNS.classpath"/>
 		</javac>
 		
-		<echo message="Compiling the java source files..." />
+		<echo message="build-service done"></echo>
+		
+	</target>
+	
+	<target name="build-client" depends="generate-bindings,build">
+		<echo>build-client done</echo>
+	</target>
+	
+	<target name="build">
 		<javac destdir="${build.dir}" debug="on" includeantruntime="false">
-			<src path="src" />
-			<classpath refid="RNS.classpath"/>
-		</javac>
-		
+				<src path="${src}" />
+				<classpath>
+					<path refid="RNS.classpath" />
+				</classpath>
+			</javac>
 	</target>
 	
 	<!-- Target clean -->
 	<target name="myclean" description="Clean all">
-		<delete dir="${build.dir}" />
-		<delete dir="${gen.src}"/>
+		<delete>
+		   <fileset dir="${build.dir}">
+		      <include name="*"/>
+		   </fileset>
+		</delete>
+		<delete>
+		   <fileset dir="${gen.src}">
+		      <include name="*"/>
+		   </fileset>
+		</delete>
+
 	</target>
 
 </project>

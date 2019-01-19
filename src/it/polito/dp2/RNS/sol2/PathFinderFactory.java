@@ -14,7 +14,7 @@ public class PathFinderFactory {
 			prop = "http://localhost:7474/db";
 		
 		// create a new path finder
-		PathFinder f = new PathFinder(System.getProperty("it.polito.dp2.RNS.lab3.Neo4JURL"));
+		PathFinder f = new PathFinder(prop);
 		return f;
 		
 	}

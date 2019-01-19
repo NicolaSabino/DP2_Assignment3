@@ -4,12 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,7 +14,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -122,8 +118,8 @@ public class RnsSystemResource {
 				temp.getNextPlace().add(root.clone().path(identifier).toTemplate());			// set the `nextplace` link
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
-		GenericEntity ret = new GenericEntity<List<Place>>(places2.getPlace()){};
-		return Response.status(Status.OK).entity(ret).build();
+		
+		return Response.status(Status.OK).entity(places2).build();
 	}
 	
 	@GET
@@ -375,10 +371,11 @@ public class RnsSystemResource {
 	public Response getVehicle(@PathParam("id") String id){
 		Vehicle target = service.getVehicle(id);								// get the target vehicle from the service
 		if(target == null)														// check the result
-			Response.status(Status.NOT_FOUND).entity(id+" not found").build();	// if it is null, the resource does not exists
+			Response.status(Status.NOT_FOUND).build();	// if it is null, the resource does not exists
 		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
 		String uri = root.clone().toTemplate();					// generate a string from the URI
 		Vehicle v2 = new Vehicle();								// create a new empty container
+		System.out.println("target id: "+target.getId());
 		v2.setId(target.getId());
 		v2.setOrigin(uri.replace("vehicles/".concat(target.getId()), "places/".concat(target.getOrigin())));
 		v2.setPosition(uri.replace("vehicles/".concat(target.getId()), "places/".concat(target.getPosition())));
@@ -457,26 +454,23 @@ public class RnsSystemResource {
 		// --1-- check if the vehicle is already in the system
 		Vehicle v = service.getVehicle(vehicle.getId());	// search the vehicle
 		if( v != null)										// i already exists throw and exception
-			return Response.status(Status.CONFLICT).entity(vehicle.getId() + " already exists in the system").build();
+			return Response.status(Status.CONFLICT).entity("VEHICLE ALREADY EXISTS").build();
 		// --2-- check the gate type
 		Place place = service.getPlace(vehicle.getOrigin());		// get the place from the db
 		if( place == null)
-			return Response.status(Status.CONFLICT).entity(vehicle.getOrigin()+" is not present in the system").build();
+			return Response.status(Status.CONFLICT).entity("ORIGIN IS NOT PRESENT IN THE SYSTEM").build();
 		if(place.getGate() == null)
-			return Response.status(Status.FORBIDDEN).entity(place.getId() + " is not a gate").build();
+			return Response.status(Status.FORBIDDEN).entity("ORIGIN IS NOT A GATE").build();
 		if( place.getGate()==Gate.OUT)
-			return Response.status(Status.FORBIDDEN).entity(place.getId() + " is not an IN or INOUT gate").build();
+			return Response.status(Status.FORBIDDEN).entity("ORIGIN IS NO A VAILD GATE").build();
 		// --3-- check if the destination is reachable and exists
 		Place dest = service.getPlace(vehicle.getDestination());
 		if(dest == null)
-			return Response.status(Status.CONFLICT).entity(vehicle.getOrigin()+" is not present in the system").build();
+			return Response.status(Status.CONFLICT).entity("DESTINATION IS NOT PRESENT IN THE SYSTEM").build();
 		List<String> res = service.isReachable(vehicle.getOrigin(), vehicle.getDestination());
 		if(res == null)
-			return Response.status(Status.CONFLICT).entity(vehicle.getDestination()+" is not reachable from " + vehicle.getPosition()).build();
+			return Response.status(Status.CONFLICT).entity("DESTINATION IS NOT REACHABLE").build();
 		
-		// --4-- check the capacity of the place
-		if(service.getCapacity(place.getId()).intValue() >= place.getCapacity())
-			return Response.status(Status.CONFLICT).entity(vehicle.getOrigin()+" is full").build();
 		
 		//return the shortest path
 		ShortestPath path = new ShortestPath();					// create a new empty shortest path container
@@ -565,7 +559,7 @@ public class RnsSystemResource {
 		// --1-- check if the vehicle is stored in the db
 		Vehicle v = service.getVehicle(id);				// search the target vehicle
 		if(v == null)									// check the return value
-			return Response.status(Status.NOT_FOUND).entity(id + " is not present in the system").build();
+			return Response.status(Status.NOT_FOUND).entity("VEHICLE NOT FOUND").build();
 		
 		// further improvements --2 -- check if the vehicle is in the PARKED state
 		//	if(v.getState() == VState.PARKED)
@@ -573,11 +567,11 @@ public class RnsSystemResource {
 		// --3-- check if the new place is a valid one
 		
 		if(vehicle.getPosition()==null)
-			return Response.status(Status.BAD_REQUEST).entity(" missing field `position`").build();
+			return Response.status(Status.BAD_REQUEST).build();
 		
 		Place p = service.getPlace(vehicle.getPosition());
 		if(p == null)
-			return Response.status(Status.CONFLICT).entity(vehicle.getPosition() + " is not present in the system").build();
+			return Response.status(Status.CONFLICT).entity("POSITION NOT PRESENT IN THE SYSTEM").build();
 		// --4-- check if the new position is in the suggested path
 		ConcurrentSkipListSet<String> path =service.getShortestPath(id);
 		
@@ -600,7 +594,7 @@ public class RnsSystemResource {
 				// if the new place is not reachable from the previous current position
 				// of the vehicle, the request from the vehicle is considered wrong by the system, and nothing
 				// changes.
-				return Response.status(Status.CONFLICT).entity(p.getId() + " is not reachable from the previous position").build();
+				return Response.status(Status.CONFLICT).entity("NOT REACHABLE FROM PREVIOUS POSITION").build();
 			}else{// if yes
 				// --4.2.2--
 				//computes a new path from the new current position of the vehicle to the destination, and
@@ -611,7 +605,7 @@ public class RnsSystemResource {
 					//the vehicle remains without a suggested path.
 					if(service.clearShortestPath(v.getId()) == null)
 						return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-					return Response.status(Status.OK).entity("the destination is not reachable from the new current place").build();
+					return Response.status(Status.NO_CONTENT).build();
 				}
 				ShortestPath sp = new ShortestPath();									// create a new empty container
 				UriBuilder root = uriInfo.getAbsolutePathBuilder();						// get the root URI
@@ -670,19 +664,23 @@ public class RnsSystemResource {
     		@ApiResponse(code = 404, message = "Not Found"),
     		@ApiResponse(code = 409, message = "BadRequest"),
     		})
-	public Response exit(@PathParam("id") String id){
+	public Response exit(@PathParam("id") String id,Vehicle tmp){
 		// --1-- check if the vehicle exists
 		Vehicle vehicle = service.getVehicle(id);
 		if (vehicle == null)							
-			return Response.status(Status.NOT_FOUND).entity(id + " is not present in the system").build();
+			return Response.status(Status.NOT_FOUND).entity("VEHICLE NOT PRESENT IN THE SYSTEM").build();
 		// --2-- check if the gate allow to exit
-		Place p = service.getPlace(vehicle.getPosition());
+		Place p = service.getPlace(tmp.getPosition());
 		if(p == null)
-			return Response.status(Status.CONFLICT).entity(vehicle + " is not present in the system").build();
-		if(p.getGate() == null)
-			return Response.status(Status.CONFLICT).entity(vehicle.getPosition() + " is not a gate").build();
-		if(p.getGate() == Gate.IN)
-			return Response.status(Status.CONFLICT).entity(vehicle.getPosition() + " is not an OUT or INOUT gate").build();
+			return Response.status(Status.CONFLICT).entity("POSITION NOT PRESENT IN THE SYSTEM").build();
+		
+		List<String> list = service.isReachable(vehicle.getPosition(),p.getId());
+		if(list == null)	// not reachable
+			return Response.status(Status.CONFLICT).entity("POSITION NOT VALID").build();
+		if(p.getGate() == null)// it is not a gate
+			return Response.status(Status.CONFLICT).entity("POSITION NOT VALID").build();
+		if(p.getGate() == Gate.IN)	// no OUT or INOUT
+			return Response.status(Status.CONFLICT).entity("POSITION NOT VALID").build();
 		if (service.deleteVehicle(id) == null)
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		return Response.status(Status.OK).entity("bye bye").build();

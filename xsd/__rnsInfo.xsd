@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<xsd:schema  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:element name="RnsSystem" type="RnsSystem"/>
+	<xsd:element name="shortestPath" type="shortestPath"/>
+	<xsd:element name="connection" type="connection"/>
+	<xsd:element name="connections" type="connections"/>
+	<xsd:element name="vehicle" type="vehicle"/>
+	<xsd:element name="vehicles" type="vehicles"/>
+	<xsd:element name="roadSegment" type="roadSegment"/>
+	<xsd:element name="parkingArea" type="parkingArea"/>
+	<xsd:element name="place" type="place">
+		<!-- unique #1 -->
+		<xsd:unique name="serviceUniqueness">
+			<xsd:selector xpath="parkingArea/service"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+	</xsd:element>
+	
+	<xsd:complexType name="connections">
+		<xsd:sequence>
+			<xsd:element name="connection" type="connection" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="vehicles">
+		<xsd:sequence>
+			<xsd:element name="vehicle" type="vehicle" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="places">
+		<xsd:sequence>
+			<xsd:element name="place" type="place" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	
+	<xsd:complexType  name="RnsSystem">
+		<xsd:sequence>
+			<xsd:element name="places" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="gates" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="roadSegments" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="parkingAreas" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="vehicles" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="connections" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="self" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="shortestPath">
+		<xsd:sequence>
+			<xsd:element name="place" type="xsd:anyURI" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="connection">
+		<xsd:sequence>
+			<xsd:element name="from" type="xsd:anyURI"/>
+			<xsd:element name="to" type="xsd:anyURI"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="vehicle">
+		<xsd:sequence>
+			<xsd:element name="self" type="xsd:anyURI"/>
+			<xsd:element name="entryTime" type="xsd:dateTime"/>
+			<xsd:element name="type" type="vType"/>
+			<xsd:element name="state" type="vState"/>
+			<xsd:element name="position" type="xsd:anyURI"/>
+			<xsd:element name="origin" type="xsd:anyURI"/>
+			<xsd:element name="destination" type="xsd:anyURI"/>
+			<xsd:element name="path" type="xsd:anyURI"/>
+			<xsd:element name="newPosition" type="xsd:anyURI"/>
+			<xsd:element name="newState" type="xsd:anyURI"/>
+			<xsd:element name="exit" type="xsd:anyURI"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="plateId"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="commonPlaceType">
+		<xsd:sequence>
+			<xsd:element name="nextPlace" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string" use="required"/>
+		<xsd:attribute name="capacity" type="xsd:int" use="required"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="place">
+		<xsd:complexContent>
+			<xsd:extension base="commonPlaceType">
+			<xsd:sequence>
+				<xsd:choice>
+					<xsd:element name="roadSegment" type="roadSegment"/>
+					<xsd:element name="parkingArea" type="parkingArea"/>
+					<xsd:element name="gate" type="gate"/>
+				</xsd:choice>
+				<xsd:element name="self" type="xsd:anyURI"/>
+				<xsd:element name="connectedTo" type="xsd:anyURI"/>
+				<xsd:element name="vehicles" type="xsd:anyURI"/>
+			</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+		
+	
+
+	<xsd:complexType name="roadSegment">
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="road" type="xsd:string" use="required"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="parkingArea">
+		<xsd:sequence>
+			<xsd:element name="service" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	
+	<!-- SIMPLE TYPES -->
+	<xsd:simpleType name="plateId">
+		<xsd:restriction base="xsd:string">
+                <xsd:pattern value="[A-Z0-9]+"/>
+         </xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="vType">
+	  <xsd:restriction base="xsd:string">
+	    <xsd:enumeration value="CAR"/>
+	    <xsd:enumeration value="TRUCK"/>
+	    <xsd:enumeration value="SHUTTLE"/>
+	    <xsd:enumeration value="CARAVAN"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="vState">
+	  <xsd:restriction base="xsd:string">
+	    <xsd:enumeration value="PARKED"/>
+	    <xsd:enumeration value="IN_TRANSIT"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+	 <xsd:simpleType name="gate">
+	  <xsd:restriction base="xsd:string">
+	    <xsd:enumeration value="IN"/>
+	    <xsd:enumeration value="OUT"/>
+	    <xsd:enumeration value="INOUT"/>
+	  </xsd:restriction>
+	</xsd:simpleType>
+	
+</xsd:schema>
