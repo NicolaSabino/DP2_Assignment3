@@ -31,8 +31,9 @@
 	</path>
 	
 	<!-- generate bindings -->
-	<target name="generate-bindings" depends="myclean">
+	<target name="generate-bindings">
 		<mkdir dir="${gen.src}" />
+		<mkdir dir="${build.dir}"/>
 		<exec executable="xjc" failonerror="true">
 			<arg value="-d" />
 			<arg value="${gen.src}" />
@@ -48,20 +49,38 @@
 			<arg value="${custom.dir}/DataTypes.xsd" />
 		</exec>
 	</target>
+	
+	
 	<!-- build service -->
-	<target name="build-service"  depends="generate-bindings,build">
-		<echo message="Compiling ${pack1} and ${pack2}..." />
-		<mkdir dir="${build.dir}"/>
-		<javac destdir="build" debug="on" includeantruntime="false">
+	<target name="build-service" depends="generate-bindings">
+		<echo message="Compiling ${pack1} and ${pack2}"/>
+		<javac destdir="${build.dir}" debug="on" includeantruntime="false">
 			<src path="${gen.src}" />
 			<classpath refid="RNS.classpath"/>
 		</javac>
 		
-		<echo message="build-service done"></echo>
-		
+		<javac destdir="${build.dir}" debug="on" includeantruntime="false">
+			<src path="${src}" />
+			<classpath>
+				<path refid="RNS.classpath" />
+			</classpath>
+		</javac>
 	</target>
 	
-	<target name="build-client" depends="generate-bindings,build">
+	<!-- build client -->
+	<target name="build-client" depends="generate-bindings">
+		<javac destdir="${build.dir}" debug="on" includeantruntime="false">
+			<src path="${src}" />
+			<classpath>
+				<path refid="RNS.classpath" />
+			</classpath>
+		</javac>
+	</target>
+	
+	
+	
+	
+	<!--<target name="build-client" depends="generate-bindings,build">
 		<echo>build-client done</echo>
 	</target>
 	
@@ -72,21 +91,7 @@
 					<path refid="RNS.classpath" />
 				</classpath>
 			</javac>
-	</target>
-	
-	<!-- Target clean -->
-	<target name="myclean" description="Clean all">
-		<delete>
-		   <fileset dir="${build.dir}">
-		      <include name="*"/>
-		   </fileset>
-		</delete>
-		<delete>
-		   <fileset dir="${gen.src}">
-		      <include name="*"/>
-		   </fileset>
-		</delete>
+	</target>-->
 
-	</target>
 
 </project>
