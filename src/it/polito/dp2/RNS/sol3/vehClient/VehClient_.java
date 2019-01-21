@@ -22,12 +22,12 @@ import it.polito.dp2.RNS.lab3.EntranceRefusedException;
 import it.polito.dp2.RNS.lab3.ServiceException;
 import it.polito.dp2.RNS.lab3.UnknownPlaceException;
 import it.polito.dp2.RNS.lab3.WrongPlaceException;
+import it.polito.dp2.RNS.sol1.jaxb.CategoryType;
 import it.polito.dp2.RNS.sol1.jaxb.Place;
 import it.polito.dp2.RNS.sol1.jaxb.Places;
 import it.polito.dp2.RNS.sol1.jaxb.RnsSystem;
 import it.polito.dp2.RNS.sol1.jaxb.ShortestPath;
 import it.polito.dp2.RNS.sol1.jaxb.VState;
-import it.polito.dp2.RNS.sol1.jaxb.VType;
 import it.polito.dp2.RNS.sol1.jaxb.Vehicle;
 
 public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
@@ -83,17 +83,19 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 	@Override
 	public List<String> enter(String plateId, VehicleType type, String inGate, String destination)
 			throws ServiceException, UnknownPlaceException, WrongPlaceException, EntranceRefusedException {
-		System.out.println("sto inserendo un veicolo");
 		Vehicle v = new Vehicle();
 		v.setId(plateId);
-		v.setType(VType.valueOf(type.toString()));
+		v.setCategory(CategoryType.valueOf(type.toString()));
 		v.setOrigin(inGate);
 		v.setDestination(destination);
+		
+		// in this method i post using JSON in order to demonstrate the full compatibility
+		// of the web service with both JSON and XML
 		
 		Response result;
 		try{
 			WebTarget target = ClientBuilder.newClient().target(this.resources.get("vehicles"));
-			result = target.request(MediaType.APPLICATION_XML).post(Entity.entity(v, MediaType.APPLICATION_XML));
+			result = target.request(MediaType.APPLICATION_XML).post(Entity.entity(v, MediaType.APPLICATION_JSON));
 				if(result == null)
 					throw new Exception();
 		}catch (Exception e) {
@@ -133,6 +135,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 	@Override
 	public List<String> move(String newPlace) throws ServiceException, UnknownPlaceException, WrongPlaceException {
 		Vehicle v = new Vehicle();
+		v.setId(this.plateID);
 		v.setPosition(newPlace);
 		
 		Response result;
@@ -182,6 +185,8 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 			throw new ServiceException();
 		}
 		
+		if(result.getStatus() != Status.NO_CONTENT.getStatusCode())
+			throw new ServiceException();
 		return;
 
 	}
@@ -198,6 +203,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 	public void exit(String outGate) throws ServiceException, UnknownPlaceException, WrongPlaceException {
 		
 		Vehicle v = new Vehicle();
+		v.setId(this.plateID);
 		v.setPosition(outGate);
 
 		Response result;
@@ -213,9 +219,9 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 
 		// check error codes
 		int code = result.getStatus();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("POSITION NOT PRESENT IN THE SYSTEM"))
+		if(code == Status.NOT_FOUND.getStatusCode()) // POSITION NOT FOUND
 			throw new UnknownPlaceException();
-		if(code == Status.CONFLICT.getStatusCode() && result.readEntity(String.class).matches("POSITION NOT VALID"))
+		if(code == Status.CONFLICT.getStatusCode()) // POSITION NOT VALID
 			throw new WrongPlaceException();
 	
 		return ;
@@ -238,6 +244,8 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 			e.printStackTrace();
 			throw new Exception();
 		}
+		if(result.getStatus() != Status.OK.getStatusCode())
+			throw new Exception();
 		return result.readEntity(RnsSystem.class);
 	}
 	
@@ -248,17 +256,21 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 	 * @throws Exception
 	 */
 	private Places getPlaces() throws Exception{
-		Places result;
+		Response result;
 		try{
 			WebTarget target = ClientBuilder.newClient().target(this.resources.get("places"));
-			result = target.request(MediaType.APPLICATION_XML).get(Places.class);
+			result = target.request(MediaType.APPLICATION_XML).get(Response.class);
 				if(result == null)
 					throw new Exception();
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception();
 		}
-		return result;
+		
+		if(result.getStatus() != Status.OK.getStatusCode())
+			throw new Exception();
+		Places places = result.readEntity(Places.class);
+		return places;
 	}
 	
 

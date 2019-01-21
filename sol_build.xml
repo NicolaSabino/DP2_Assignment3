@@ -6,6 +6,7 @@
 	
 	<!-- properties -->
 	<property name="custom.dir" location="${basedir}/custom"/>
+	<property name="web.dir" location="${basedir}/WebContent/WEB-INF/classes/xsd/"/>
 	<property name="build.dir" location="${basedir}/build"/>
 	<property name="schema.dir" location="${basedir}/xsd" />
 	<property name="gen.src" location="${basedir}/gen-src"/>
@@ -32,6 +33,7 @@
 	
 	<!-- generate bindings -->
 	<target name="generate-bindings">
+		<copy file="${schema.dir}/rnsInfo.xsd" tofile="${web.dir}/rnsInfo.xsd" overwrite="true" />
 		<mkdir dir="${gen.src}" />
 		<mkdir dir="${build.dir}"/>
 		<exec executable="xjc" failonerror="true">

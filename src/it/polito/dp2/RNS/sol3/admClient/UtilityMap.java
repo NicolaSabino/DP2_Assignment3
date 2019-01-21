@@ -20,10 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.org.apache.xml.internal.utils.WrongParserException;
-
 import it.polito.dp2.RNS.VehicleReader;
-import it.polito.dp2.RNS.lab3.WrongPlaceException;
 import it.polito.dp2.RNS.sol1.jaxb.Connection;
 import it.polito.dp2.RNS.sol1.jaxb.Connections;
 import it.polito.dp2.RNS.sol1.jaxb.Gate;
@@ -82,7 +79,6 @@ public class UtilityMap {
 		try {
 			system = this.getRoot();
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -203,7 +199,10 @@ public class UtilityMap {
 			e.printStackTrace();
 			throw new Exception();
 		}
-		return result.readEntity(RnsSystem.class);
+		if(result.getStatus() == Status.OK.getStatusCode())
+			return result.readEntity(RnsSystem.class);
+		else
+			throw new Exception();
 	}
 	  
 	/**
@@ -223,6 +222,8 @@ public class UtilityMap {
 			e.printStackTrace();
 			throw new Exception();
 		}
+		if(result.getStatus() != Status.OK.getStatusCode())
+			throw new Exception();
 		return result;
 	 }
 	 
@@ -243,6 +244,8 @@ public class UtilityMap {
 				e.printStackTrace();
 				throw new Exception();
 			}
+			if(result.getStatus()!= Status.OK.getStatusCode())
+				throw new Exception();
 			return result;
 	 }
 	 
@@ -284,6 +287,8 @@ public class UtilityMap {
 			e.printStackTrace();
 			throw new Exception();
 		}
+		if(result.getStatus() != Status.OK.getStatusCode())
+			throw new Exception();
 		return result;
 	}
 	
@@ -310,12 +315,9 @@ public class UtilityMap {
 	
 	// ok
 	public VehicleReader getVehicle(String id) throws Exception {
-		System.out.println("Get Vehicle " + id);
 		Response r = this.getVehicle_(id);
 		if(r.getStatus() == Status.NOT_FOUND.getStatusCode()){
-			System.out.println(id+" not found!");
-			return null;
-			// `getVehicle() should return null if NOT FOUND
+			return null; // `getVehicle() should return null if NOT FOUND
 		}
 		Vehicle v = r.readEntity(Vehicle.class);
 		IdentifiedEntityReader_ entity = new IdentifiedEntityReader_(v.getId());	// create a new entity
@@ -327,7 +329,7 @@ public class UtilityMap {
 		PlaceReader_ destination = this.p_map.get(des);								// set the destination in p_map
 		Calendar entryTime = CalendarConverter.toCalendar(v.getEntryTime());		// convert the entryTime
 		VehicleState_ state = VehicleState_.valueOf(v.getState().toString());		// convert the state
-		VehicleType_ type = VehicleType_.valueOf(v.getType().toString());			// convert the type
+		VehicleType_ type = VehicleType_.valueOf(v.getCategory().toString());			// convert the type
 		VehicleReader_ vehicle = new VehicleReader_(entity, entryTime, origin, position, destination, state, type);	// create a vehicle reader
 		return vehicle;
 		
@@ -347,7 +349,7 @@ public class UtilityMap {
 			PlaceReader_ destination = this.p_map.get(des);								// get the destination in p_map
 			Calendar entryTime = CalendarConverter.toCalendar(v.getEntryTime());		// convert the entryTime
 			VehicleState_ state = VehicleState_.valueOf(v.getState().toString());		// convert the state
-			VehicleType_ type = VehicleType_.valueOf(v.getType().toString());			// convert the type
+			VehicleType_ type = VehicleType_.valueOf(v.getCategory().toString());			// convert the type
 			VehicleReader_ vehicle = new VehicleReader_(entity, entryTime, origin, position, destination, state, type);	// create a vehicle reader
 			set.add(vehicle);
 		}
@@ -357,6 +359,8 @@ public class UtilityMap {
 	
 	public Set<VehicleReader> getVehicles(String id) throws Exception {
 		Response r = this.getVehicles_(id);
+		if(r.getStatus() == Status.NOT_FOUND.getStatusCode())
+			throw new Exception();
 		Vehicles vv = r.readEntity(Vehicles.class);
 		Set<VehicleReader> set = new HashSet<>();
 		for(Vehicle v:vv.getVehicle()){
@@ -369,7 +373,7 @@ public class UtilityMap {
 			PlaceReader_ destination = this.p_map.get(des);								// get the destination in p_map
 			Calendar entryTime = CalendarConverter.toCalendar(v.getEntryTime());		// convert the entryTime
 			VehicleState_ state = VehicleState_.valueOf(v.getState().toString());		// convert the state
-			VehicleType_ type = VehicleType_.valueOf(v.getType().toString());			// convert the type
+			VehicleType_ type = VehicleType_.valueOf(v.getCategory().toString());			// convert the type
 			VehicleReader_ vehicle = new VehicleReader_(entity, entryTime, origin, position, destination, state, type);	// create a vehicle reader
 			set.add(vehicle);
 		}

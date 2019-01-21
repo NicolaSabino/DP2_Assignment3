@@ -101,7 +101,6 @@ public class PathFinder{
 	public RnsReader reloadModel() throws ServiceException, ModelException {
 		
 		if(isModelLoaded()){
-			System.out.println("clear all");
 			removeConnections();
 			removeNodes();
 			this.sys_link_map.clear();

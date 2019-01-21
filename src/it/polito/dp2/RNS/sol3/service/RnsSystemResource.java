@@ -68,10 +68,10 @@ public class RnsSystemResource {
 	 */
 	
 	@GET
-    @ApiOperation(value = "getRnsSystem", notes = "reads main resource")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
+    @ApiOperation(value = "getRnsSystem", notes = "read the `RnsSystem` object")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK ")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getRnsSystem(){
+	public RnsSystem getRnsSystem(){
 		RnsSystem sys = new RnsSystem();													// create an empty container
 		UriBuilder root = uriInfo.getAbsolutePathBuilder();									// get the absolute path of the request.
 		sys.setSelf(root.toTemplate());														// set the `self` field
@@ -81,15 +81,15 @@ public class RnsSystemResource {
 		sys.setParkingAreas(root.clone().path("places").path("parkingAreas").toTemplate());	// set the `parlingAreas" field
 		sys.setConnections(root.clone().path("connections").toTemplate());					// set the `connections" field
 		sys.setVehicles(root.clone().path("vehicles").toTemplate());						// set the `vehicles" field
-		return Response.status(Status.OK).entity(sys).build();
+		return sys; // 200 OK
 	}
 	
 	@GET
 	@Path("/places")
-    @ApiOperation(value = "getPlaces", notes = "searches places")
+    @ApiOperation(value = "getPlaces", notes = "read the `Places` object")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getPlaces(){
+	public Places getPlaces(){
 		// be careful with POINTER when accessing directly to DB data structures.
 		// we have to create a CLONE in order to not modify the DB resource
 		Places places = service.getPlaces(SearchScope.ALL);		// get all the places from the service
@@ -122,15 +122,15 @@ public class RnsSystemResource {
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
 		
-		return Response.status(Status.OK).entity(places2).build();
+		return places2; // 200 OK
 	}
 	
 	@GET
 	@Path("/connections")
-    @ApiOperation(value = "getConnections", notes = "searches connections")
+    @ApiOperation(value = "getConnections", notes = "read the `Connections` object")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getConnections(){
+	public Connections getConnections(){
 		Connections connections = new Connections();
 		UriBuilder root = uriInfo.getAbsolutePathBuilder();								// get the root URI
 		String uri = root.clone().toTemplate();											// create an uri string
@@ -140,15 +140,15 @@ public class RnsSystemResource {
 			temp.setTo(uri.replace("connections", "places/".concat(c.getTo())));		// set `to` field
 			connections.getConnection().add(temp);										// add the connection to the empty set
 		}
-		return Response.status(Status.OK).entity(connections).build(); // 200 OK
+		return connections; // 200 OK
 	}
 	
 	@GET
 	@Path("/places/gates")
-    @ApiOperation(value = "getGates", notes = "searches gates")
+    @ApiOperation(value = "getGates", notes = "read the `Place` object with `Gate` elements only")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getGates(@QueryParam("type") String keyword){
+	public Places getGates(@QueryParam("type") String keyword){
 		Places places = service.getPlaces(SearchScope.GATES);		// get all the places from the service
 		UriBuilder root = uriInfo.getAbsolutePathBuilder();		// get the root URI
 		Places places2 = new Places();							// new EMPTY places container (the final clone)
@@ -167,15 +167,15 @@ public class RnsSystemResource {
 			}
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
-		return Response.status(Status.OK).entity(places2).build();
+		return places; // 200 OK
 	} 
 	
 	@GET 
 	@Path("/places/roadSegments")
-    @ApiOperation(value = "getRoadSegments", notes = "searches road segmetns")
+    @ApiOperation(value = "getRoadSegments", notes = "read the `Place` object with `RoadSegment` elements only")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getRoadSegments(@QueryParam("type") String keyword){
+	public Places getRoadSegments(@QueryParam("type") String keyword){
 		Places places = service.getPlaces(SearchScope.ROADSEGMENTS);		// get all the places from the service
 		UriBuilder root = uriInfo.getAbsolutePathBuilder();					// get the root URI
 		Places places2 = new Places();										// new EMPTY places container (the final clone)
@@ -197,15 +197,15 @@ public class RnsSystemResource {
 			}
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
-		return Response.status(Status.OK).entity(places2).build();
+		return places; // 200 OK
 	}
 	
 	@GET
 	@Path("/places/parkingAreas")
-    @ApiOperation(value = "getParkingAreas", notes = "searches parking areas")
+    @ApiOperation(value = "getParkingAreas", notes = "read the `Place` object with `ParkingArea` elements only")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getParkingAreas(@QueryParam("type") String keyword){
+	public Places getParkingAreas(@QueryParam("type") String keyword){
 		Places places = service.getPlaces(SearchScope.PARKINGAREAS);		// get all the places from the service
 		UriBuilder root = uriInfo.getAbsolutePathBuilder();					// get the root URI
 		Places places2 = new Places();										// new EMPTY places container (the final clone)
@@ -226,19 +226,19 @@ public class RnsSystemResource {
 			}
 			places2.getPlace().add(temp);														// add the place to places2														
 		}
-		return Response.status(Status.OK).entity(places2).build();
+		return places2; // 200 OK
 	}
 	
 	@GET 
 	@Path("/places/{id}")
-    @ApiOperation(value = "getPlace", notes = "read single place"
+    @ApiOperation(value = "getPlace", notes = "read a single `Place`"
 	)
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 404, message = "Not Found, the place is not present in the system"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public  Response getPlace(@PathParam("id") String id){
+	public  Place getPlace(@PathParam("id") String id){
 		Place target = service.getPlace(id);											// search the target place with the corresponding `id`
 		if (target==null)																// check the return value
 			throw new NotFoundException();	// if it is null, the resource does not exists
@@ -268,19 +268,19 @@ public class RnsSystemResource {
 			String newUri = uri.replace(place.getId(), identifier);				// replace the identifier with the proper one
 			place.getNextPlace().add(newUri);									// add the new next place
 		}
-		return Response.status(Status.OK).entity(place).build();				// return the target place
+		return target; // return the target place 200 OK
 	}
 	
 	@GET
 	@Path("/places/{id}/vehicles")
-    @ApiOperation(value = "getVehiclesFromPlace", notes = "read vehicles from place"
+    @ApiOperation(value = "getVehiclesFromPlace", notes = "read `Vehicles` object in a specific place"
 	)
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 404, message = "Not Found, the place is not present in the system"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public  Response getVehiclesFromPlace(@PathParam("id") String id){
+	public  Vehicles getVehiclesFromPlace(@PathParam("id") String id){
 		if(service.getPlace(id) == null)
 			throw new NotFoundException();
 		Vehicles vehicles = new Vehicles();									// create a new empty set
@@ -297,6 +297,7 @@ public class RnsSystemResource {
 			v2.setDestination(uri.replace(id.concat("/vehicles"), target.getDestination()));
 			v2.setEntryTime(target.getEntryTime());
 			v2.setState(target.getState());
+			v2.setCategory(target.getCategory());
 			v2.setSelf(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()));
 			v2.setPath(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/path"));
 			v2.setNewState(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/state"));
@@ -304,18 +305,18 @@ public class RnsSystemResource {
 			v2.setExit(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/exit"));
 			vehicles.getVehicle().add(v2);
 		}
-		return Response.status(Status.OK).entity(vehicles).build(); // 200 OK
+		return vehicles; // 200 OK
 	}
 	
 	@GET
 	@Path("/places/{id}/connectedTo")
-    @ApiOperation(value = "getPlacesConnectedTo", notes = "read places that are conected to the selected palce")
+    @ApiOperation(value = "getPlacesConnectedTo", notes = "read `Places`element representing next hops from a given place")
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 404, message = "Not Found, the place is not present in the system"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getPlacesConnectedTo(@PathParam("id") String id){
+	public Places getPlacesConnectedTo(@PathParam("id") String id){
 		Places places = service.getplacesConnectedTo(id);	// search the list of connected places to `id`
 		if (places==null)									// check the return value
 			throw new NotFoundException(); // if it is null, the resource does not exists
@@ -333,15 +334,15 @@ public class RnsSystemResource {
 				temp.getNextPlace().add(uri.replace(id.concat("/connectedTo"), identifier));					// set the `nextplace` link
 			places2.getPlace().add(temp);																		// add the place to places2														
 		}
-		return Response.status(Status.OK).entity(places2).build(); // 200 OK
+		return places2; // 200 OK
 	}
 	
 	@GET
 	@Path("/vehicles")
-    @ApiOperation(value = "getVehicles", notes = "searches vehicles ")
+    @ApiOperation(value = "getVehicles", notes = "read `Vehicles` object")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "OK")})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getVehicles(){
+	public Vehicles getVehicles(){
 		Vehicles ret = new Vehicles();
 		for(Vehicle target: service.getVehicles().getVehicle()){							// get all the vehicles from the service
 			UriBuilder root = uriInfo.getAbsolutePathBuilder();								// get the root URI
@@ -353,7 +354,7 @@ public class RnsSystemResource {
 			v2.setDestination(uri.replace("vehicles", "places/".concat(target.getDestination())));
 			v2.setEntryTime(target.getEntryTime());
 			v2.setState(target.getState());
-			v2.setType(target.getType());
+			v2.setCategory(target.getCategory());
 			v2.setSelf(uri.replace("vehicles","vehicles/".concat(target.getId())));
 			v2.setPath(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/path")));
 			v2.setNewState(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/state")));
@@ -361,18 +362,18 @@ public class RnsSystemResource {
 			v2.setExit(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/exit")));
 			ret.getVehicle().add(v2);
 		}
-		return Response.status(Status.OK).entity(ret).build();
+		return ret; // 200 OK
 	}
 	
 	@GET
 	@Path("/vehicles/{id}")
-    @ApiOperation(value = "getVehicle", notes = "read single vehicle")
+    @ApiOperation(value = "getVehicle", notes = "read `Vehicle` object")
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getVehicle(@PathParam("id") String id){
+	public Vehicle getVehicle(@PathParam("id") String id){
 		Vehicle target = service.getVehicle(id);								// get the target vehicle from the service
 		if(target == null)														// check the result
 			throw new NotFoundException();	// if it is null, the resource does not exists
@@ -385,24 +386,24 @@ public class RnsSystemResource {
 		v2.setDestination(uri.replace("vehicles/".concat(target.getId()), "places/".concat(target.getDestination())));
 		v2.setEntryTime(target.getEntryTime());
 		v2.setState(target.getState());
-		v2.setType(target.getType());
+		v2.setCategory(target.getCategory());
 		v2.setSelf(root.clone().toTemplate());
 		v2.setPath(root.clone().path("path").toTemplate());
 		v2.setNewState(root.clone().path("state").toTemplate());
 		v2.setNewState(root.clone().path("position").toTemplate());
 		v2.setExit(root.clone().path("exit").toTemplate());
-		return Response.status(Status.OK).entity(v2).build(); // 200 OK											
+		return v2; // 200 OK											
 	}
 	
 	@GET
 	@Path("/vehicles/{id}/path")
-    @ApiOperation(value = "getPath", notes = "read the vehicle path")
+    @ApiOperation(value = "getPath", notes = "read the vehicle `ShortestPath`")
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
     		})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response getPath(@PathParam("id") String id){
+	public ShortestPath getPath(@PathParam("id") String id){
 		Vehicle v = service.getVehicle(id);										// search the vehicle in the db
 		if(v == null)
 			throw new NotFoundException();
@@ -416,7 +417,7 @@ public class RnsSystemResource {
 		for(String s:res){														// for each place in `res`
 			sp.getPlace().add(uri.replace("vehicles/".concat(id).concat("/path"), "palces/".concat(s)));	// create the corresponding uri
 		}
-		return Response.status(Status.OK).entity(sp).build();
+		return sp; // 200 OK
 	}
 
 	// we can use PUT for creation (idempotent)
@@ -442,15 +443,17 @@ public class RnsSystemResource {
 	 */
 	@POST
 	@Path("/vehicles")
-    @ApiOperation(value = "createVehicle", notes = "create a new vehicle")
+    @ApiOperation(value = "createVehicle", notes = "create a new `Vehicle`")
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
     		@ApiResponse(code = 400, message = "Bad Request"),
-    		@ApiResponse(code = 409, message = "Conflict")
+    		@ApiResponse(code = 404, message = "Not found, the origin is not present in the system"),
+    		@ApiResponse(code = 404, message = "Not found, the destination is not present in the system"),
+    		@ApiResponse(code = 409, message = "Conflict, the origin is not a gate or is not an IN or INOUT gate")
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response createVehicle(Vehicle vehicle){
+	public ShortestPath createVehicle(Vehicle vehicle){
 		
 		// --1-- check if the vehicle is already in the system
 		Vehicle v = service.getVehicle(vehicle.getId());	// search the vehicle
@@ -488,7 +491,7 @@ public class RnsSystemResource {
 		} catch (DatatypeConfigurationException e) {
 			throw new InternalServerErrorException();
 		}
-		vehicle.setType(vehicle.getType()); // not mandatory
+		vehicle.setCategory(vehicle.getCategory()); // not mandatory
 		vehicle.setEntryTime(xgc);
 		vehicle.setPosition(vehicle.getOrigin());
 		vehicle.setPath(null);
@@ -504,7 +507,7 @@ public class RnsSystemResource {
 		
 		// increment the number of vehicles in the place
 		//service.incrementPlace(place.getId());
-		return Response.status(Status.OK).entity(path).build(); // 200 OK
+		return path; // 200 OK
 		
 	}
 	
@@ -518,16 +521,16 @@ public class RnsSystemResource {
 	)
     @ApiResponses(value = {
     		@ApiResponse(code = 204, message = "No Content"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
     		@ApiResponse(code = 400, message = "Bad Request"),
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response updateVehicleState(@PathParam("id") String id,Vehicle vehicle){
+	public void updateVehicleState(@PathParam("id") String id,Vehicle vehicle){
 		Vehicle vv = service.updateVehicleState(id,vehicle);
 		if(vv == null)
 			throw new NotFoundException();
-		return Response.status(Status.NO_CONTENT).build();
+		return; //204 No Content
 	}
 	
 	/*
@@ -546,17 +549,20 @@ public class RnsSystemResource {
 	
 	@POST
 	@Path("/vehicles/{id}/position")
-    @ApiOperation(value = "updateVehicle", notes = "update single vehicle"
+    @ApiOperation(value = "updateVehicle", notes = "update `Vehicle` position"
 	)
     @ApiResponses(value = {
-    		@ApiResponse(code = 200, message = "OK"),
-    		@ApiResponse(code = 204, message = "No Content"),
-    		@ApiResponse(code = 404, message = "Not Found"),
+    		@ApiResponse(code = 200, message = "OK, position updated, new shortest path available"),
+    		@ApiResponse(code = 204, message = "No Contentn position updated, currently on the previous shortest path"),
+    		@ApiResponse(code = 204, message = "No Contentn position updated, empyty shortest path"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
+    		@ApiResponse(code = 404, message = "Not Found, the new position is not present in the system"),
+    		@ApiResponse(code = 409, message = "Conflict, the new position is not reachable from the previous one"),
     		@ApiResponse(code = 400, message = "Bad Request"),
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	public Response updateVehiclePosition(@PathParam("id") String id,Vehicle vehicle){
+	public ShortestPath updateVehiclePosition(@PathParam("id") String id,Vehicle vehicle){
 		// --1-- check if the vehicle is stored in the db
 		Vehicle v = service.getVehicle(id);				// search the target vehicle
 		if(v == null)									// check the return value
@@ -583,7 +589,7 @@ public class RnsSystemResource {
 			Vehicle vv = service.setNewPosition(v.getId(),p.getId(),v.getPosition());
 			if(vv == null)
 				throw new InternalServerErrorException();
-			return Response.status(Status.NO_CONTENT).build(); // position updated , return NO CONTENT
+			return null; // position updated , return NO CONTENT
 
 		}else{
 			// --4.2--
@@ -606,7 +612,7 @@ public class RnsSystemResource {
 					//the vehicle remains without a suggested path.
 					if(service.clearShortestPath(v.getId()) == null)
 						throw new InternalServerErrorException();
-					return Response.status(Status.NO_CONTENT).build(); // NO CONTENT
+					return null; // NO CONTENT
 				}
 				ShortestPath sp = new ShortestPath();									// create a new empty container
 				UriBuilder root = uriInfo.getAbsolutePathBuilder();						// get the root URI
@@ -622,7 +628,7 @@ public class RnsSystemResource {
 				service.decrementPlace(vehicle.getPosition());
 				// update current position counter
 				service.incrementPlace(vv.getPosition());
-				return Response.status(Status.OK).entity(sp).build();
+				return sp; //200 OK
 
 			}
 		}
@@ -640,9 +646,8 @@ public class RnsSystemResource {
     @ApiOperation(value = "deleteVehicle", notes = "delete single vehicle"
 	)
     @ApiResponses(value = {
-    		@ApiResponse(code = 204, message = "No content"),
-    		@ApiResponse(code = 404, message = "Not Found"),
-    		//@ApiResponse(code = 409, message = "Conflict"), if a vehicle is not in a exit gate
+    		@ApiResponse(code = 204, message = "No content, vehicle deleated correctly"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
     		})
 	public Response deleteVehicle(@PathParam("id") String id){
 		if (service.deleteVehicle(id) == null)
@@ -662,11 +667,13 @@ public class RnsSystemResource {
 	)
     @ApiResponses(value = {
     		@ApiResponse(code = 204, message = "No content"),
-    		@ApiResponse(code = 404, message = "Not Found"),
-    		@ApiResponse(code = 404, message = "Conflict"),
-    		@ApiResponse(code = 409, message = "BadRequest"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
+    		@ApiResponse(code = 404, message = "Not Found, the position is not present in the system"),
+    		@ApiResponse(code = 409, message = "Conflict, position is not reachable"),
+    		@ApiResponse(code = 409, message = "Conflict, position is not an OUT or INOUT gate"),
+    		@ApiResponse(code = 400, message = "BadRequest"),
     		})
-	public Response exit(@PathParam("id") String id,Vehicle tmp){
+	public void exit(@PathParam("id") String id,Vehicle tmp){
 		// --1-- check if the vehicle exists
 		Vehicle vehicle = service.getVehicle(id);
 		if (vehicle == null)							
@@ -674,7 +681,7 @@ public class RnsSystemResource {
 		// --2-- check if the gate allow to exit
 		Place p = service.getPlace(tmp.getPosition());
 		if(p == null)
-			throw new ConflictException(); // position is not present in the system
+			throw new NotFoundException(); // position is not present in the system
 		
 		List<String> list = service.isReachable(vehicle.getPosition(),p.getId());
 		if(list == null)	// not reachable
@@ -685,7 +692,7 @@ public class RnsSystemResource {
 			throw new ConflictException();
 		if (service.deleteVehicle(id) == null)
 			throw new InternalServerErrorException();
-		return Response.status(Status.NO_CONTENT).build(); // no content
+		return; // no content
 		
 	}
 	

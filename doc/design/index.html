@@ -1,0 +1,407 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Interface Design</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+</head>
+
+<body>
+ <h1>RnsSystem Interface Design</h1>
+ <p>This design choice aims at respecting the main REST guidelines:
+ 	<ul>
+ 		<li><strong>Information hiding</strong>: The number of resources are limited only to  user available operations 
+ 		in order to not expose the implementation and avoid unexpected interaction with the service. For instance, a client can get a list of road segments
+ 		but is not able to interact with a specific road since there are no operation on this conceptual entity.
+ 		<li><strong>Granularity level</strong>: The whole system is well dimensioned in order to obtain a good trade off between <strong>performance</strong> and <strong>flexibility</strong> 
+ 		using different combination of resources.
+ 		For instance the user can both obtain an overall snapshot of places present in the system accessing at Places (higher workload) or can focus only on a specific category of places like Gates,
+ 		according to the need of the moment.
+ 		<li><strong>HATEOAS</strong>The service is fully navigable and self-explanatory via hyperlinks.
+ 	</ul>
+ </p>
+ <p>
+ 	The only available operation on <i>statics</i> resources of the systems, like places and connections, is <strong>GET</strong>.<br>
+ 	Creation of vehicles are performed via <strong>POST</strong> operations since we want to underline the fact that cannot be two vehicles with the same plateID in the system.
+ 	Furthermore a vehicle cannot enter twice in the system, must first exit and then perform a new request to enter in the system.<br>
+ 	Each update on the system is performed via a <strong>PUT</strong> operation since it is better than a POST for its idempotent behaviour.<br>
+ 	A vehicle can request to exit from the system via a <strong>DELETE</strong> operation on the corresponding <i>rns/vehicles/{id}/position</i> resource,
+ 	but this operation is accepted by the system only if some conditions are satisfied.<br>
+ 	A vehicle can be removed from the system in any moment from an administrator via a <strong>DELETE</strong> operation on the corresponding <i>rns/vehicles/{id}</i> resource and the request
+ 	is always accepted by the system.
+ 	
+ </p>
+ <p>
+ 	<h2>Resources design</h2>
+ 	<pre>	
+[roadNavigationSystem]  →  the main resource  (0)
+├── [places]  →  the places in the system  (1)
+│	├── [gates]  →  the "gate" type places in the system  (1.1)
+│	├── [roadSegments]  →  the "road-segment" type places in the system  (1.2)
+│	├── [parkingAreas]  →  the "parking-area" type places in the system  (1.3)
+│	└── [ {id} ]  →  the place uniquely identified by the "id"  (1.4)
+│		├── [vehicles]  →  the vehicles that are currently in the uniquely identified place "id"  (1.4.1)
+│		└── [connectedTo]  →  the places reachable from the uniquely identified place "id"  (1.4.2)
+├── [vehicles]  →  the vehicles currently registered in the system (2)
+│	└── [ {id} ]  →  the vehicle uniquely identified by the "id" (2.1)
+│		├── [state]  →  the current state of the identified vehicle  (2.1.1)
+│		├── [position]  →  the current position of the identified vehicle, a place of the system  (2.1.2)
+│		└── [path]  →  the path to reach the destination of the identified vehicle  (2.1.3)
+└── [connections]  → the connections between places in the system (3)
+ 	</pre>
+ </p>
+ <hr>
+ <p>
+ 	<h2>Resources Mapping</h2>
+ 	<table>
+		<tr>
+	  		<th>Resources</th>
+	  		<th>Relative URLs</th>
+	 	</tr>
+		 <tr>
+		  	<td>0</td>
+		 	<td>rns</td>
+		 </tr>
+		 <tr>
+		  	<td>1</td>
+		 	<td>rns/places</td>
+		 </tr>
+		 <tr>
+		  	<td>1.1</td>
+		 	<td>rns/places/gates</td>
+		 </tr>
+		 <tr>
+		  	<td>1.2</td>
+		 	<td>rns/places/roadSegments</td>
+		 </tr>
+		 <tr>
+		  	<td>1.3</td>
+		 	<td>rns/places/parkingAreas</td>
+		 </tr>
+		 <tr>
+		  	<td>1.4</td>
+		 	<td>rns/places/{id}</td>
+		 </tr>
+		 <tr>
+		  	<td>1.4.1</td>
+		 	<td>rns/places/{id}/vehicles</td>
+		 </tr>
+		 <tr>
+		  	<td>1.4.2</td>
+		 	<td>rns/places/{id}/connectedTo</td>
+		 </tr>
+		 <tr>
+		  	<td>2</td>
+		 	<td>rns/vehicles</td>
+		 </tr>
+		 <tr>
+		  	<td>2.1</td>
+		 	<td>rns/vehicles/{id}</td>
+		 </tr>
+		 <tr>
+		  	<td>2.1.1</td>
+		 	<td>rns/vehicles/{id}/state</td>
+		 </tr>
+		 <tr>
+		  	<td>2.1.2</td>
+		 	<td>rns/vehicles/{id}/position</td>
+		 </tr>
+		 <tr>
+		  	<td>2.1.3</td>
+		 	<td>rns/vehicles/{id}/path</td>
+		 </tr>
+	</table>
+ </p>
+ <hr>
+ <p>
+ 	<h2>Mapping Operations</h2>
+ 	<table>
+		<tr>
+	  		<th>Resources</th>
+	  		<th>Verb</th>
+	  		<th>Query params</th>
+	  		<th>Status</th>
+	  		<th>Response Body</th>
+	  		<th>Meaning</th>
+	 	</tr>
+		<tr>
+		  	<td>rns</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>RnsSystem</td>
+		 	<td>obtain the main resource</td>
+		</tr>
+		<tr>
+		  	<td>rns/places</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Places</td>
+		 	<td>get all the places</td>
+		</tr>
+		<tr>
+		  	<td>rns/places/gates</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Places</td>
+		 	<td>get all the gates</td>
+		</tr>
+		<tr>
+		  	<td>rns/places/roadSegments</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Places</td>
+		 	<td>get all the road segments</td>
+		</tr>
+		<tr>
+		  	<td>rns/places/parkingAreas</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Places</td>
+		 	<td>get all the parking areas</td>
+		</tr>
+		<tr>
+		  	<td>rns/places/{id}</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Places</td>
+		 	<td>get a specific place</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the place is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td>rns/places/{id}/vehicles</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Vehicles</td>
+		 	<td>a list of vehicles that are currently in the place {id}</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the place is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td>rns/places/{id}/connectedTo</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Places</td>
+		 	<td>a list of places connected to {id}</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the place is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td>rns/vehicles</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Vehicles</td>
+		 	<td>get all the vehicles in the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td>POST</td>
+		 	<td>Vehicle</td>
+		 	<td>200 OK</td>
+		 	<td>ShortestPath</td>
+		 	<td>a vehicle request to enter in the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the destination is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the origin is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>400 BAD REQEUST</td>
+		 	<td>-</td>
+		 	<td>the body of the request is not valid</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>409 CONFLICT</td>
+		 	<td>-</td>
+		 	<td>the origin is not a gate or is not an IN or INOUT gate</td>
+		</tr>
+		<tr>
+		  	<td>rns/vehicles/{id}</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>Vehicle</td>
+		 	<td>get a specific vehicle in the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td>DELETE</td>
+		 	<td>-</td>
+		 	<td>204 NO CONTENT</td>
+		 	<td>-</td>
+		 	<td>remove the vehicle {id} from the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the vehicle is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td>rns/vehicles/{id}/path</td>
+		 	<td>GET</td>
+		 	<td>-</td>
+		 	<td>200 OK</td>
+		 	<td>ShortestPath</td>
+		 	<td>get the suggested path for a specific vehicle in the system, the path can be empty</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the vehicle is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td>rns/vehicles/{id}/state</td>
+		 	<td>PUT</td>
+		 	<td>Vehicle</td>
+		 	<td>204 NO CONTENT</td>
+		 	<td>-</td>
+		 	<td>update the vehicle {id} state</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the vehicle is not present in the system</td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>400 BAD REQUEST</td>
+		 	<td>-</td>
+		 	<td>the body of the request is not valid</td>
+		</tr>
+		<tr>
+		  	<td>rns/vehicles/{id}/position</td>
+		 	<td>PUT</td>
+		 	<td>Vehicle</td>
+		 	<td>200 OK</td>
+		 	<td>ShortestPath</td>
+		 	<td>position updated, a new shortest path was calculated<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>204 NO CONTENT</td>
+		 	<td>-</td>
+		 	<td>position updated<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the vehicle or and/or the position are not present in the system<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>400 BAD REQUEST</td>
+		 	<td>-</td>
+		 	<td>the body of the request is not valid<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>409 CONFLICT</td>
+		 	<td>-</td>
+		 	<td>the new position is not reachable from the previous one<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td>DELETE</td>
+		 	<td>Vehicle</td>
+		 	<td>204 NO CONTENT</td>
+		 	<td>-</td>
+		 	<td>the request from {id} to exit is accepted<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>404 NOT FOUND</td>
+		 	<td>-</td>
+		 	<td>the vehicle and/or position are not present in the system<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>402 BAD REQUEST</td>
+		 	<td>-</td>
+		 	<td>the body of the request is not valid<td>
+		</tr>
+		<tr>
+		  	<td></td>
+		 	<td></td>
+		 	<td></td>
+		 	<td>409 CONFLICT</td>
+		 	<td>-</td>
+		 	<td>position is not reachable or/and is not an OUT or INOUT gate<td>
+		</tr>
+	</table>
+ </p>
+ 
+</body>
+</html>

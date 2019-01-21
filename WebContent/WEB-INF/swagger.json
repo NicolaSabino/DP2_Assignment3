@@ -1,0 +1,625 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : ""
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/RnsSystem/rest",
+  "tags" : [ {
+    "name" : "rns"
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/rns" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getRnsSystem",
+        "description" : "reads main resource",
+        "operationId" : "getRnsSystem",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/rns/connections" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getConnections",
+        "description" : "searches connections",
+        "operationId" : "getConnections",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/rns/places" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getPlaces",
+        "description" : "searches places",
+        "operationId" : "getPlaces",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/rns/places/gates" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getGates",
+        "description" : "searches gates",
+        "operationId" : "getGates",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/rns/places/parkingAreas" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getParkingAreas",
+        "description" : "searches parking areas",
+        "operationId" : "getParkingAreas",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/rns/places/roadSegments" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getRoadSegments",
+        "description" : "searches road segmetns",
+        "operationId" : "getRoadSegments",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/rns/places/{id}" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getPlace",
+        "description" : "read single place",
+        "operationId" : "getPlace",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/rns/places/{id}/connectedTo" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getPlacesConnectedTo",
+        "description" : "read places that are conected to the selected palce",
+        "operationId" : "getPlacesConnectedTo",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/rns/places/{id}/vehicles" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getVehiclesFromPlace",
+        "description" : "read vehicles from place",
+        "operationId" : "getVehiclesFromPlace",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/rns/vehicles" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getVehicles",
+        "description" : "searches vehicles ",
+        "operationId" : "getVehicles",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "rns" ],
+        "summary" : "createVehicle",
+        "description" : "create a new vehicle",
+        "operationId" : "createVehicle",
+        "consumes" : [ "application/xml", "application/json" ],
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Vehicle"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "409" : {
+            "description" : "Conflict"
+          }
+        }
+      }
+    },
+    "/rns/vehicles/{id}" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getVehicle",
+        "description" : "read single vehicle",
+        "operationId" : "getVehicle",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "rns" ],
+        "summary" : "deleteVehicle",
+        "description" : "delete single vehicle",
+        "operationId" : "deleteVehicle",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No content"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/rns/vehicles/{id}/exit" : {
+      "post" : {
+        "tags" : [ "rns" ],
+        "summary" : "exit",
+        "description" : "request to exit the system",
+        "operationId" : "exit",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Vehicle"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No content"
+          },
+          "404" : {
+            "description" : "Conflict"
+          },
+          "409" : {
+            "description" : "BadRequest"
+          }
+        }
+      }
+    },
+    "/rns/vehicles/{id}/path" : {
+      "get" : {
+        "tags" : [ "rns" ],
+        "summary" : "getPath",
+        "description" : "read the vehicle path",
+        "operationId" : "getPath",
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/rns/vehicles/{id}/position" : {
+      "post" : {
+        "tags" : [ "rns" ],
+        "summary" : "updateVehicle",
+        "description" : "update single vehicle",
+        "operationId" : "updateVehiclePosition",
+        "consumes" : [ "application/xml", "application/json" ],
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Vehicle"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/rns/vehicles/{id}/state" : {
+      "put" : {
+        "tags" : [ "rns" ],
+        "summary" : "updateVehicle",
+        "description" : "update single vehicle",
+        "operationId" : "updateVehicleState",
+        "consumes" : [ "application/xml", "application/json" ],
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Vehicle"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Vehicle" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "self" : {
+          "type" : "string"
+        },
+        "entryTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "category" : {
+          "type" : "string",
+          "enum" : [ "CAR", "TRUCK", "SHUTTLE", "CARAVAN" ]
+        },
+        "state" : {
+          "type" : "string",
+          "enum" : [ "PARKED", "IN_TRANSIT" ]
+        },
+        "position" : {
+          "type" : "string"
+        },
+        "origin" : {
+          "type" : "string"
+        },
+        "destination" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        },
+        "newPosition" : {
+          "type" : "string"
+        },
+        "newState" : {
+          "type" : "string"
+        },
+        "exit" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "vehicle"
+      }
+    },
+    "Connections" : {
+      "type" : "object",
+      "required" : [ "self" ],
+      "properties" : {
+        "connection" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Connection"
+          }
+        },
+        "self" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "connections"
+      }
+    },
+    "ParkingArea" : {
+      "type" : "object",
+      "properties" : {
+        "service" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "parkingArea"
+      }
+    },
+    "Connection" : {
+      "type" : "object",
+      "required" : [ "from", "to" ],
+      "properties" : {
+        "from" : {
+          "type" : "string"
+        },
+        "to" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "connection"
+      }
+    },
+    "RoadSegment" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "road" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "roadSegment"
+      }
+    },
+    "ShortestPath" : {
+      "type" : "object",
+      "properties" : {
+        "place" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "shortestPath"
+      }
+    },
+    "RnsSystem" : {
+      "type" : "object",
+      "required" : [ "connections", "gates", "parkingAreas", "places", "roadSegments", "self", "vehicles" ],
+      "properties" : {
+        "places" : {
+          "type" : "string"
+        },
+        "gates" : {
+          "type" : "string"
+        },
+        "roadSegments" : {
+          "type" : "string"
+        },
+        "parkingAreas" : {
+          "type" : "string"
+        },
+        "vehicles" : {
+          "type" : "string"
+        },
+        "connections" : {
+          "type" : "string"
+        },
+        "self" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "RnsSystem"
+      }
+    },
+    "Place" : {
+      "type" : "object",
+      "required" : [ "connectedTo", "self", "vehicles" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "nextPlace" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "capacity" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "roadSegment" : {
+          "$ref" : "#/definitions/RoadSegment"
+        },
+        "parkingArea" : {
+          "$ref" : "#/definitions/ParkingArea"
+        },
+        "gate" : {
+          "type" : "string",
+          "enum" : [ "IN", "OUT", "INOUT" ]
+        },
+        "self" : {
+          "type" : "string"
+        },
+        "connectedTo" : {
+          "type" : "string"
+        },
+        "vehicles" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "place"
+      }
+    },
+    "Places" : {
+      "type" : "object",
+      "required" : [ "place" ],
+      "properties" : {
+        "place" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Place"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "places"
+      }
+    },
+    "Vehicles" : {
+      "type" : "object",
+      "required" : [ "vehicle" ],
+      "properties" : {
+        "vehicle" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Vehicle"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "vehicles"
+      }
+    }
+  }
+}
