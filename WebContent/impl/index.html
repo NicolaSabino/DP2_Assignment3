@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Implementation</title>
+
+</head>
+
+<body>
+ <h1>RnsSystem Implementation</h1>
+ <p>
+ 	<h2>XSD Schema Files</h2>
+ 	Two schema files are provided for the project: <strong>rnsInfo.xsd</strong> and <strong>DataTypes.xsd</strong>,respectively stored in <i>xsd</i> and <i>custom</i>.<br>
+ 	DataTypes is a collection of complex types provided to interact with <i>Neo4j</i> while rnsInfo is a modified version of the same schema presented in Assignment 1.<br>
+ 	This new version remove some references and keys since the service is designed to generate small pieces of information in order to fit the design principles shown in
+ 	the design documentation.<br>
+ 	JAXB annotated classes are generated from these schema files with a specific target in the <i>ant file</i> and compiled in the <i>build</i> directory.<br>
+ 	As long as the service and clients shared the same directory structures, i use the same generated classes for both of them but, in a more realistic scenario, the provided 
+ 	<strong>application.wadl</strong> can be used to auto generate classes to interact with the web-service.
+ </p>
+ <p>
+ 	<h2>Data persistency and Concurrency</h2>
+ 	The web serive structure is divided in three java classes:
+ 	<ul>
+ 		<li>Resource
+ 		<li>Service
+ 		<li>DB
+ 	</ul>
+ 	The web-service is not aimed to perform data persistency via a database, it achieve this purpose using the <strong>Singleton class DB</strong> instantiated at the first interaction,
+ 	loading all information about places and connections from the <i>RNS</i> interface.<br>
+ 	As long as new Resource Object is generated for each request, we must ensure a <strong>thread safe architecture</strong>.<br>
+ 	In <i>Service</i> the majority of methods are simple calls, so they only forwards requests to the DB class and we do not have to implement further synchronization mechanism.<br>
+ 	The remaining methods are thread safe since are read-only methods.<br>
+ 	The DB class exploits several thread safe techniques, like the use of <strong>synchronized</strong> methods that mix several read-write operations, and when possible using single thread safe operation
+ 	on thread safe data-structures from the collection <i>java.util.concurrent.*</i>.(eg. ConcurrentSkipListSet,ConcurrentLinkedQueue, putIfAbsent() and so on)
+ </p>
+ 
+ <p>
+ 	<h2>Validation</h2>
+ 	The service implements two class validators; XMLValidationInterceptor which implement <i>MessageBodyReader</i> is in charge of check the XML structure of incoming requests.<br>
+ 	JsonValidationInterceptor which implement <i>ReaderIntercepror</i> is in charge of check Json incoming messages.
+ 	Thanks to these two components and the JAXB annotated classes the web service is fully compatible with both Json and XML.
+ </p>
+ <p>
+ 	<h2>Further improvements</h2>
+ 	The current implementation, considering the amount of data coming from the RNS interface, do not implement some important best practice to improve performance and scalability.
+ 	<strong>Paging</strong> is the best way to manage large amount of data, no matter the growth of the system. Moreover, to increase the overall reliability and performance of the system,
+ 	<strong>Conditional requests</strong> could be exploited.<br>
+ 	Finally <strong>Authentication</strong> and <strong>SSL/TLS</strong> can be used to ensure respectively access control and confidentiality.
+ </p>
+ 
+ 
+ 
+</body>
+</html>

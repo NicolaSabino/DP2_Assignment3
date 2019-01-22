@@ -141,7 +141,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 		Response result;
 		try{
 			WebTarget target = ClientBuilder.newClient().target(this.resources.get("vehicles"));
-			result = target.path(this.plateID).path("position").request(MediaType.APPLICATION_XML).post(Entity.entity(v, MediaType.APPLICATION_XML));
+			result = target.path(this.plateID).path("position").request(MediaType.APPLICATION_XML).put(Entity.entity(v, MediaType.APPLICATION_XML));
 				if(result == null)
 					throw new Exception();
 		}catch (Exception e) {
@@ -209,7 +209,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 		Response result;
 		try{
 			WebTarget target = ClientBuilder.newClient().target(this.resources.get("vehicles"));
-			result = target.path(this.plateID).path("exit").request(MediaType.APPLICATION_XML).post(Entity.entity(v, MediaType.APPLICATION_XML));
+			result = target.path(this.plateID).path("position").request(MediaType.APPLICATION_XML).post(Entity.entity(v, MediaType.APPLICATION_XML));
 				if(result == null)
 					throw new Exception();
 		}catch (Exception e) {
@@ -223,6 +223,7 @@ public class VehClient_ implements it.polito.dp2.RNS.lab3.VehClient {
 			throw new UnknownPlaceException();
 		if(code == Status.CONFLICT.getStatusCode()) // POSITION NOT VALID
 			throw new WrongPlaceException();
+
 	
 		return ;
 

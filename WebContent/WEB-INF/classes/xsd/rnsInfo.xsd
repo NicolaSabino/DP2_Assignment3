@@ -84,7 +84,6 @@
 							<xsd:element name="path" type="xsd:anyURI" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="newPosition" type="xsd:anyURI" minOccurs="0" maxOccurs="1"/>
 							<xsd:element name="newState" type="xsd:anyURI" minOccurs="0" maxOccurs="1"/>
-							<xsd:element name="exit" type="xsd:anyURI" minOccurs="0" maxOccurs="1"/>
 						</xsd:sequence>
 					</xsd:extension>
 			</xsd:complexContent>

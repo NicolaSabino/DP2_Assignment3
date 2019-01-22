@@ -241,7 +241,8 @@ public class RnsSystemDB {
 			e.printStackTrace();
 		}
 		Iterator<List<String>> iter = resultSet.iterator();
-		return iter.next();
+		if(iter.hasNext())return iter.next();
+		else return null;
 	}
 
 	public Collection<String> storeShortesPath(String id, List<String> res) {
@@ -280,7 +281,7 @@ public class RnsSystemDB {
 		return vehicles.put(vehicle, v);
 	}
 
-	public Object clearShortestPath(String vehicle) {
+	public synchronized Object clearShortestPath(String vehicle) {
 		Object o = paths.remove(vehicle);
 		paths.put(vehicle, new ConcurrentSkipListSet<>());
 		return o;

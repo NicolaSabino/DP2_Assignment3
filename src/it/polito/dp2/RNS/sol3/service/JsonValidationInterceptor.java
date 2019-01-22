@@ -14,6 +14,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.ReaderInterceptor;
@@ -31,7 +32,7 @@ import org.xml.sax.SAXParseException;
 
 
 @Provider
-@Consumes({"application/json","text/json"})
+@Consumes({MediaType.APPLICATION_JSON})
 public class JsonValidationInterceptor implements ReaderInterceptor {
 	final String jaxbPackage = "it.polito.dp2.RNS.sol1.jaxb";
 	Schema schema;

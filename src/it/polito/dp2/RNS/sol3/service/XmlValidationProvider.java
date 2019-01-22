@@ -30,7 +30,7 @@ import org.xml.sax.SAXParseException;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 @Provider
-@Consumes({"application/xml","text/xml"})
+@Consumes({MediaType.APPLICATION_XML})
 public class XmlValidationProvider<T> implements MessageBodyReader<T> {
 	final String jaxbPackage = "it.polito.dp2.RNS.sol1.jaxb";
 	Schema schema;

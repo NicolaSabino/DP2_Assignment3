@@ -302,7 +302,6 @@ public class RnsSystemResource {
 			v2.setPath(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/path"));
 			v2.setNewState(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/state"));
 			v2.setNewPosition(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/position"));
-			v2.setExit(uri.replace("places/"+id+"/vehicles", "vehicles/"+target.getId()+"/exit"));
 			vehicles.getVehicle().add(v2);
 		}
 		return vehicles; // 200 OK
@@ -359,7 +358,6 @@ public class RnsSystemResource {
 			v2.setPath(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/path")));
 			v2.setNewState(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/state")));
 			v2.setNewPosition(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/position")));
-			v2.setExit(uri.replace("vehicles", "vehicles/".concat(target.getId()).concat("/exit")));
 			ret.getVehicle().add(v2);
 		}
 		return ret; // 200 OK
@@ -390,8 +388,7 @@ public class RnsSystemResource {
 		v2.setSelf(root.clone().toTemplate());
 		v2.setPath(root.clone().path("path").toTemplate());
 		v2.setNewState(root.clone().path("state").toTemplate());
-		v2.setNewState(root.clone().path("position").toTemplate());
-		v2.setExit(root.clone().path("exit").toTemplate());
+		v2.setNewPosition(root.clone().path("position").toTemplate());
 		return v2; // 200 OK											
 	}
 	
@@ -447,8 +444,7 @@ public class RnsSystemResource {
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK"),
     		@ApiResponse(code = 400, message = "Bad Request"),
-    		@ApiResponse(code = 404, message = "Not found, the origin is not present in the system"),
-    		@ApiResponse(code = 404, message = "Not found, the destination is not present in the system"),
+    		@ApiResponse(code = 404, message = "Not found, the origin and/or destination are not present in the system"),
     		@ApiResponse(code = 409, message = "Conflict, the origin is not a gate or is not an IN or INOUT gate")
     		})
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
@@ -547,16 +543,14 @@ public class RnsSystemResource {
 	 * changes.
 	 */
 	
-	@POST
+	@PUT
 	@Path("/vehicles/{id}/position")
     @ApiOperation(value = "updateVehicle", notes = "update `Vehicle` position"
 	)
     @ApiResponses(value = {
     		@ApiResponse(code = 200, message = "OK, position updated, new shortest path available"),
-    		@ApiResponse(code = 204, message = "No Contentn position updated, currently on the previous shortest path"),
-    		@ApiResponse(code = 204, message = "No Contentn position updated, empyty shortest path"),
-    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
-    		@ApiResponse(code = 404, message = "Not Found, the new position is not present in the system"),
+    		@ApiResponse(code = 204, message = "No Contentn position updated,empty shortest path or currently on the previous shortest path"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle and/or position are not present in the system"),
     		@ApiResponse(code = 409, message = "Conflict, the new position is not reachable from the previous one"),
     		@ApiResponse(code = 400, message = "Bad Request"),
     		})
@@ -579,12 +573,22 @@ public class RnsSystemResource {
 		Place p = service.getPlace(vehicle.getPosition());
 		if(p == null)
 			throw new NotFoundException(); // position not present in the system
+		
+		
 		// --4-- check if the new position is in the suggested path
 		ConcurrentSkipListSet<String> path =service.getShortestPath(id);
 		
 		if(path.contains(p.getId())){
 			// --4.1--
 			// the vehicle is still on the suggested route
+			
+			// MY ADDITION
+			//chech the reachability since you cannot go in the opposite direction
+			// of a connection
+			List<String> tmp = service.isReachable(v.getPosition(), p.getId());
+			if(tmp == null)
+				throw new ConflictException();
+			
 			// we can easily update the position with the new one
 			Vehicle vv = service.setNewPosition(v.getId(),p.getId(),v.getPosition());
 			if(vv == null)
@@ -662,18 +666,16 @@ public class RnsSystemResource {
 	 * from the set of vehicles that are tracked in the system and forgets about it.
 	 */
 	@POST
-	@Path("/vehicles/{id}/exit")
+	@Path("/vehicles/{id}/position")
     @ApiOperation(value = "exit", notes = "request to exit the system"
 	)
     @ApiResponses(value = {
     		@ApiResponse(code = 204, message = "No content"),
-    		@ApiResponse(code = 404, message = "Not Found, the vehicle is not present in the system"),
-    		@ApiResponse(code = 404, message = "Not Found, the position is not present in the system"),
-    		@ApiResponse(code = 409, message = "Conflict, position is not reachable"),
-    		@ApiResponse(code = 409, message = "Conflict, position is not an OUT or INOUT gate"),
+    		@ApiResponse(code = 404, message = "Not Found, the vehicle and/or position are not present in the system"),
+    		@ApiResponse(code = 409, message = "Conflict, position is not reachable or is not an OUT or INOUT gate"),
     		@ApiResponse(code = 400, message = "BadRequest"),
     		})
-	public void exit(@PathParam("id") String id,Vehicle tmp){
+	public Response exit(@PathParam("id") String id,Vehicle tmp){
 		// --1-- check if the vehicle exists
 		Vehicle vehicle = service.getVehicle(id);
 		if (vehicle == null)							
@@ -691,8 +693,8 @@ public class RnsSystemResource {
 		if(p.getGate() == Gate.IN)	// no OUT or INOUT
 			throw new ConflictException();
 		if (service.deleteVehicle(id) == null)
-			throw new InternalServerErrorException();
-		return; // no content
+			Response.status(Status.INTERNAL_SERVER_ERROR).entity(" non funziona ").build();
+		return null; // no content
 		
 	}
 	
